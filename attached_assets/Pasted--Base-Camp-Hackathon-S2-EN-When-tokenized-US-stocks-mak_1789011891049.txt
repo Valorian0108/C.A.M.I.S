@@ -1,0 +1,610 @@
+# Base Camp Hackathon S2 EN
+
+> When tokenized US stocks make 7×24 the new normal, humans sleep — Agents don't. The Agentic Trading era is here.
+>
+> — Bitget AI Team
+
+## I. About This Hackathon
+
+US equities have open and close hours, but tokenized US stocks (rToken) turn the trading window into 7×24. Macro events still happen on weekends while prices keep moving on-chain — this is the new frontier S2 is built to explore.
+
+**Bitget AI Base Camp Hackathon S2** focuses on **AI × US stock trading** (including tokenized US stocks / related contract scenarios), with a preference for real, runnable strategies and tools.
+
+This edition features **three Bitget main tracks** (Alpha Factory / Agentic Trading / AI Trading Desk). **Chapter II** is split into **Participant Prizes** and **Audience Engagement**; how to submit and vote is in **Chapter III**; track-specific requirements are in **Chapter IV**.
+
+<table><thead><tr><th width="190.51953125">Item</th><th>Details</th></tr></thead><tbody><tr><td>Event Period</td><td>September 3 – September 21, 2026 (submission deadline, UTC+8)</td></tr><tr><td>Format</td><td>Global, online</td></tr><tr><td>Total Prize Pool</td><td><strong>50,000 USDT</strong></td></tr><tr><td>Organizer</td><td>Bitget</td></tr><tr><td>Token Sponsors</td><td>Alibaba Cloud Qwen Qwen</td></tr><tr><td>Partners</td><td>Bitget Wallet, Foresight, Arbitrum, Solana, Tether Foundation, Kaito AI, Cysic, Wave, 706, and 7 university blockchain associations; more partners to be announced</td></tr></tbody></table>
+
+## II. Prizes & Awards
+
+> **Total prize pool: 50,000 USDT**. This chapter has two parts: what **participants** can win, and how the **audience** can engage. Process details are in **Chapter III**.
+
+**Structural differences from S1:** There is **1 Grand Prize** across the entire hackathon; **15 named sub-themes, 1 winner each**; each main track also has **2 Open Theme slots** (no named direction specified) — the **top 2** in Open Theme win prizes, with no 1st/2nd/3rd tier; there are also **10 University Special Prize winners**.
+
+### I. For Participants
+
+For teams that **submit a valid entry**. Judge review (**9/22 – 10/7**) and public voting run **in parallel** — neither replaces the other.
+
+#### 1. Judge's Main Prizes (based on work quality)
+
+Judges independently review entries from **9/22 – 10/7** according to **Chapter IV** standards:
+
+<table><thead><tr><th width="211.58984375">Award</th><th width="103.31640625">Slots</th><th width="120.7421875">Prize per Winner</th><th>Notes</th></tr></thead><tbody><tr><td>Grand Prize</td><td>1</td><td>3,000 USDT</td><td>Best overall</td></tr><tr><td>Theme Prize (named sub-themes)</td><td>15</td><td>500 USDT</td><td>5 sub-themes per track, <strong>1 winner per sub-theme</strong> (see Chapter IV for topics)</td></tr><tr><td>Open Theme Prize</td><td>6</td><td>500 USDT</td><td><strong>2 open slots per track</strong>, <strong>top 1 each</strong> (2 winners per track total); no tiered ranking</td></tr></tbody></table>
+
+**How do sub-themes work?**
+
+Each main track has **5 named sub-themes + 1 Open Theme**. When submitting via Google Form, select your **competition sub-theme** — you are not required to pick a named topic; you can go directly with Open Theme.
+
+| What you select in the form                               | Which award you compete for | Slots                                                |
+| --------------------------------------------------------- | --------------------------- | ---------------------------------------------------- |
+| Named sub-theme (e.g., "Arbitrage", "Event-Driven Agent") | Theme Prize                 | **1 winner per sub-theme** × 500 USDT                |
+| Open Theme                                                | Open Theme Prize            | **2 winners per track** (1 per open slot) × 500 USDT |
+
+A team may submit to at most **2 different themes**, with each theme being an **independent project** entered through a **separate form submission**; each entry is evaluated separately.
+
+#### 2. University Special Prize
+
+A separate award for **university students / clubs / campus teams** — not a fourth main track, but an additional university-level review layer after normal submission to any of the three main tracks.
+
+<table><thead><tr><th width="196.22265625">Item</th><th>Details</th></tr></thead><tbody><tr><td>Slots / Prize</td><td>10 winners × <strong>500 USDT</strong></td></tr><tr><td>How to enter</td><td>Submit a valid entry to any main track and fill in the full university name in the Google Form <strong>"University Name"</strong> field</td></tr><tr><td>Judging</td><td>Selected separately among valid submissions with a university name filled in; <strong>if the entry already won a main-track prize (Grand Prize / Theme / Open), it is no longer eligible for the University Special Prize</strong></td></tr><tr><td>Who it's for</td><td>Teams from universities — check the university field in the form to enter the university pool; leave blank and you won't be evaluated</td></tr></tbody></table>
+
+Demo Day application details are at the end of this chapter under "Beyond Cash Prizes" — separate from the University Special Prize; all teams may express interest.
+
+#### 3. Best Spread Award (based on X reach data)
+
+<table><thead><tr><th width="163.8125">Item</th><th>Details</th></tr></thead><tbody><tr><td>Slots / Prize</td><td>3 winners × <strong>300 USDT</strong> (1 per track)</td></tr><tr><td>How to participate</td><td>Post progress updates on X while building; <strong>attach a compliant X post link at submission on 9/21</strong></td></tr><tr><td>What's evaluated</td><td>Judges review <strong>your own / your team's</strong> reach data</td></tr><tr><td>Not counted</td><td>Data from <strong>KOL / KOC ghost-posting</strong></td></tr><tr><td>Exclusivity</td><td>Already won Grand Prize / Theme / Open → <strong>not eligible</strong> for Best Spread Award</td></tr></tbody></table>
+
+#### 4. Fan Favorite Prize (decided by public vote; prize goes to the project)
+
+This is a **cash prize for participating projects**, but **decided by audience voting**, not judge scoring:
+
+<table><thead><tr><th width="133.9609375">Item</th><th>Details</th></tr></thead><tbody><tr><td>Slots / Prize</td><td>3 winners × <strong>300 USDT</strong> (highest-voted project per track)</td></tr><tr><td>How to win</td><td>Valid submission by 9/21 + compliant X post; public voting 9/22–9/28 (rules in <strong>"II. For the Audience"</strong>)</td></tr><tr><td>Stacking</td><td>Can stack with <strong>all judge main prizes and University Special Prize</strong> — judge awards and popularity awards can be won together</td></tr></tbody></table>
+
+#### Participant Prize Rules: Exclusivity & Stacking
+
+<table><thead><tr><th width="208.01953125">Rule</th><th>Details</th></tr></thead><tbody><tr><td>Judge side (same entry)</td><td>Only the <strong>highest tier</strong> counts: Grand Prize > Theme / Open > Best Spread Award</td></tr><tr><td>University Special Prize</td><td><strong>Mutually exclusive</strong> with main-track prizes; <strong>not mutually exclusive</strong> with Demo Day invitation</td></tr><tr><td>Fan Favorite Prize</td><td>Can stack with <strong>all judge prizes and University Special Prize</strong></td></tr><tr><td>Multiple entries</td><td>Different themed entries from the same team are evaluated and awarded <strong>separately</strong></td></tr></tbody></table>
+
+#### Beyond Cash Prizes
+
+Cash is only part of the story. S2 is one stop in the **Bitget AI Base Camp long-term developer program** — strong projects get seen, connected, and followed up:
+
+<table><thead><tr><th width="252.8671875">Benefit</th><th>Details</th></tr></thead><tbody><tr><td><strong>Official Spotlight</strong></td><td>From 10/9, winning projects prioritized: interviews, long-form articles, themed tweet series; high-quality non-winning projects may also get short-form exposure</td></tr><tr><td><strong>Demo Day</strong> (post-event)</td><td>Open to all submitting teams; <strong>priority invitation for winning projects or high-scoring quality projects</strong>, connecting to <strong>internships, product beta access, investor networks</strong>, etc.</td></tr><tr><td><strong>How to apply for Demo Day</strong></td><td>Select <strong>"Apply for Demo Day"</strong> in Google Form at submission (Yes/No; blank = No); <strong>all teams may check this box</strong>; final invite list selected by ops / judges</td></tr><tr><td><strong>Ecosystem exposure</strong></td><td>Official retweets, posting calendar, partner / KOL amplification; projects that Build in Public well are more likely to be selected by the official team</td></tr><tr><td><strong>Builders Community</strong></td><td>Join the <a href="https://t.me/+o1tYqQ_lXxllYjgy">official Telegram community</a> to stay connected with S1 participants and the Bitget AI team</td></tr><tr><td><strong>Playbook Productization Opportunity</strong></td><td>Entries identified as high quality and suitable for strategy productization may be invited into Bitget Playbook's product review and listing process. If an entry is ultimately listed and distributed to users, the team may also have an opportunity to discuss a commercial or revenue-sharing arrangement. Listing, product format, and commercial terms are subject to separate review and negotiation; participation or winning does not guarantee any of them</td></tr><tr><td><strong>Qwen Build Credits</strong></td><td>Apply through a <a href="https://forms.gle/2QeJpvGB5VpipqQ68">separate Google Form</a>. Bitget reviews KYC status every 24 hours; the first 300 teams that apply and pass Bitget KYC may receive 30U-equivalent Qwen Token credits through the  <a href="https://t.me/+o1tYqQ_lXxllYjgy">official Telegram community</a></td></tr><tr><td><strong>K3 Post-Event Subsidy</strong></td><td>Select “Apply for K3 Token Subsidy” in the <a href="https://forms.gle/GyWZCMCPocgJdJon6 ">project submission form</a>. Teams that opt in and submit a valid entry may receive 30U-equivalent K3 Token credits; teams qualifying for both programs may receive up to 60U equivalent in total</td></tr></tbody></table>
+
+> Competing isn't just about the cash — Spotlight and Demo Day are the second half for teams who want to be seen by the industry and keep building.
+
+### II. For the Audience
+
+You **don't need to compete** to participate. Vote for your favorite projects during **9/22 – 10/7** for a chance at **Lucky Draw** or **Prediction prizes**.
+
+#### How to Vote
+
+<table><thead><tr><th width="142.890625">Item</th><th>Details</th></tr></thead><tbody><tr><td>Period</td><td><strong>9/22 – 10/7</strong> (UTC+8)</td></tr><tr><td>Prerequisite</td><td>After the 9/21 submission deadline, the official team <strong>publishes the full list of valid project IDs at once</strong></td></tr><tr><td>Method</td><td>Comment the <strong>project ID = vote</strong> in the comments of [TBD: Public voting post]</td></tr><tr><td>Limits</td><td><strong>1 vote counted per account</strong>; list is the full release as of 9/21, no daily updates</td></tr><tr><td>Who can vote</td><td>Anyone — <strong>no need to be a participant</strong>; participants can also rally votes for their own projects</td></tr></tbody></table>
+
+The voting window runs **in parallel** with judge review (9/22 – 10/7); voting results **do not replace** judge evaluation for Grand Prize / Theme / Open.
+
+#### Audience Cash Prizes
+
+<table><thead><tr><th width="163.30859375">Award</th><th>Trigger</th><th>Prize</th><th>Announcement</th></tr></thead><tbody><tr><td><strong>Lucky Draw</strong></td><td>The project you voted for = final <strong>"Fan Favorite"</strong> (any track)</td><td>1,000 USDT pool, <strong>50 random winners</strong>, 20 USDT each</td><td>From <strong>10/9</strong></td></tr><tr><td><strong>Prediction Prize</strong></td><td>The project you voted for = final <strong>"Grand Prize"</strong></td><td>1,000 USDT, split among the <strong>earliest 50 voters</strong></td><td>From <strong>10/9</strong></td></tr></tbody></table>
+
+{% hint style="info" %}
+**Two different things:** The Fan Favorite Prize of 300 USDT goes to **participating projects** (see previous section); Lucky Draw / Prediction prizes go to **voting audience members**. You can be both a participant and an audience member — your project wins the popularity prize while you personally chase Prediction / Lucky Draw prizes.
+{% endhint %}
+
+## III. How to Participate
+
+### Timeline (UTC+8)
+
+<table><thead><tr><th width="276.30078125">Date</th><th>Milestone</th></tr></thead><tbody><tr><td>September 3</td><td>Hackathon opens; submissions and Qwen build-credit applications open; post progress on X and attach a compliant promotional X post at submission</td></tr><tr><td>September 3 – September 21</td><td><strong>Competition period</strong>: keep building; complete <a href="https://forms.gle/GyWZCMCPocgJdJon6">Google Form </a>submission <strong>before 9/21</strong> (must include compliant X post)</td></tr><tr><td>September 21</td><td><strong>Submission deadline</strong>; after deadline Bitget publishes all valid project IDs at once and <strong>launches public voting on X</strong></td></tr><tr><td>September 22 – September 28</td><td>Public votes on X (comment project ID in Bitget's voting post)</td></tr><tr><td>September 22 – September 28</td><td>Judge review (runs <strong>in parallel</strong> with voting window, neither replaces the other)</td></tr><tr><td>October 8</td><td>Winner list announced, including Fan Favorite and the other audience-linked awards</td></tr><tr><td>From October 9</td><td>Demo Day, Spotlight and other long-tail content kick off; prize payouts processed</td></tr></tbody></table>
+
+### What You Need to Do
+
+{% stepper %}
+{% step %}
+***Get Started (from September 3)***
+
+* [Submission channel](https://forms.gle/GyWZCMCPocgJdJon6) opens **from 9/3**— if you already have a demonstrable work / Agent / strategy, **you can submit on day one**.
+* If you plan to submit later, join the [official Telegram community](https://t.me/+o1tYqQ_lXxllYjgy) for updates, Q\&A, and finding teammates.
+  {% endstep %}
+
+{% step %}
+***Pick a Track + Build (9/3 – 9/21)***
+
+* Read **Chapter IV** to choose a main track and **competition sub-theme**; each team may submit to at most **2 different themes**, each as an independent project entered through a separate form submission.
+* If you need Qwen Token credits to build your project, fill in the separate [Qwen Token application form](https://forms.gle/GyWZCMCPocgJdJon6). The first 300 teams that complete the application and pass Bitget KYC may receive 30U-equivalent Qwen Token credits.&#x20;
+
+{% hint style="info" %}
+Bitget reviews KYC status every 24 hours; once approved, collect the credits from an admin in the [official Telegram community](https://t.me/+o1tYqQ_lXxllYjgy).
+{% endhint %}
+{% endstep %}
+
+{% step %}
+***Build + Submit (deadline: before 9/21)***
+
+* Complete official [submission](<https://forms.gle/GyWZCMCPocgJdJon6 >) **before 9/21**; no separate registration is required.
+* **Promotion requirement (new in S2):** Submission must include **at least 1 X post link** — retweet \[TBD: Official post link], and introduce the product / Agent / strategy you are building. **No X post = incomplete submission**.
+
+{% hint style="info" %}
+To request the post-event K3 subsidy, select “Yes” for **Apply for K3 Token Subsidy**. Only opted-in teams with a valid submission may receive 30U-equivalent credits.
+{% endhint %}
+{% endstep %}
+
+{% step %}
+***Public Voting (9/22 – 10/7)***
+
+* After deadline, official project IDs are published; comment the ID in \[TBD: Public voting post] = vote (1 vote per account).
+* Audience prize rules → **Chapter II · II**
+  {% endstep %}
+
+{% step %}
+***Await Results (around 10/8)***
+
+* Official winner list and Spotlight announced; teams who checked Demo Day should watch for follow-up notifications.
+  {% endstep %}
+  {% endstepper %}
+
+### Basic Competition Rules
+
+1. **Submission materials**: The form must include a complete **project description** + **submission materials link** (at minimum an accessible Demo; see **Chapter IV** for track requirements). A GitHub repo or X long-form post cannot replace the project description in the form.
+2. **Multi-theme participation**: A team may submit to at most 2 different themes; each submission must be an independent project and must be entered through a **separate form submission** (one project and one set of materials per submission). Awards are calculated per **entry**; different entries from the same team are evaluated separately.
+3. **No simple reuse of S1 work**: Submissions that directly port S1 entries, or only rename / make minor edits, are not accepted. If continuing an S1 project direction, you must describe **substantive new additions** in the form; judging evaluates based on the new content.
+
+## IV. Tracks, Submission & Judging
+
+> Verifiable alpha strategies, rToken and 7×24 windows → **Alpha Factory**; LLM as autonomous decision-maker and executor → **Agentic Trading**; AI assists human traders → **AI Trading Desk**.
+
+### Main Tracks Overview
+
+| Track                                          | Choose this if…                                                                                            |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| 🟦 **Alpha Factory** (Quantitative Strategies) | You want to build verifiable US stock quantitative / algorithmic trading strategies                        |
+| 🟩 **Agentic Trading** (Agent Trading)         | You want the LLM to be the decision-maker, autonomously sensing, judging, and executing with risk controls |
+| 🟧 **AI Trading Desk** (AI Research Workbench) | You want to build AI research tools where humans make final decisions                                      |
+
+### General Submission Requirements (All Tracks)
+
+> 📢 **Submission portal:** [**Google Form**](<https://forms.gle/GyWZCMCPocgJdJon6 >) (Chinese and English versions, same fields)
+>
+> Submission window: **September 3 – September 21, 2026 (UTC+8)** · Submit anytime from opening day · **Submission complete = participation complete**
+>
+> Submitting to **2 different themes** requires **two separate** form submissions (each an independent project with independent materials; keep the same Bitget UID across both).
+
+**Requirements common to all tracks**, field by field. ✅ required · ⚪ optional.
+
+<table><thead><tr><th>Form Field</th><th width="101.59375">Required</th><th>How to Fill It</th></tr></thead><tbody><tr><td>Project Description</td><td>✅</td><td>One long-form answer covering six parts (see <strong>"How to Write the Project Description"</strong> below); GitHub / X external links cannot substitute</td></tr><tr><td>Role of the LLM in Your Project</td><td>✅</td><td>What the model actually does in your project (coding, extraction, signal reasoning, agent decisions, etc.) and which models you used. If you received Qwen credits, add where you used Qwen and whether it met your needs; skip that part if you did not</td></tr><tr><td>Submission Materials Link</td><td>✅</td><td>One field for Demo / code / video / docs / logs (see <strong>"Where Materials Go"</strong> below)</td></tr><tr><td>X Promotional Post Link</td><td>✅</td><td>Must include <code>#BitgetHackathon</code> + <code>@Bitget_AI</code>, and be an interactive promotional post introducing the product / Agent / strategy you're building</td></tr><tr><td>Track → Sub-theme</td><td>✅</td><td>Pick the track first, then its sub-theme (options vary by track; 18 named topics + 3 Open Themes)</td></tr><tr><td>University Name</td><td>⚪</td><td>Enter the full school name to enter the university pool (rules in <strong>Chapter II</strong>)</td></tr><tr><td>Apply for Demo Day</td><td>⚪</td><td>Any team may check this box (rules in <strong>Chapter II</strong>)</td></tr><tr><td>Apply for K3 Token Subsidy</td><td>⚪</td><td>Qwen credits use a separate application form, not this one</td></tr></tbody></table>
+
+**How to write the project description** (one field, six parts; judges weigh the first three most):
+
+<table><thead><tr><th width="236.03515625">Part</th><th>What a good answer looks like</th></tr></thead><tbody><tr><td>1 · Thesis (highest weight)</td><td>Why you built this, and the core hypothesis. Strategy entries: signal sources, decision logic, risk controls. Tool entries: the pain point found and why existing solutions fall short</td></tr><tr><td>2 · Target user and product value</td><td>Who will use it: a concrete segment (Retail / VIP / Pro + risk appetite, capital size, trading frequency, primary market, use case) — <strong>"all traders" is not accepted</strong> — and why that segment needs it</td></tr><tr><td>3 · Validation data and key metrics</td><td>Strategy / Agent: test period, returns, Sharpe / Sortino, max drawdown, win rate, turnover, plus fee and slippage costs. Tools: test users, task completion rate, usage data. Label figures observed / estimated / targeted; no data yet means describing your validation plan. Then explain how you will prove effective usage or distribution (users onboarded, volume, AUM, retention)</td></tr><tr><td>4 · Progress</td><td>What is built, what is not, problems and fixes, next steps; frameworks / models / APIs used</td></tr><tr><td>5 · Deliverables</td><td>List what you put in "Submission Materials Link" so judges can find it</td></tr><tr><td>6 · Your take on AI Trading (optional)</td><td>Experience and suggestions using Bitget AI tools, or your view on Agentic Trading</td></tr></tbody></table>
+
+{% hint style="warning" %}
+**What counts as an invalid submission:** missing a **compliant X post**, the **project description**, or **accessible submission materials** → invalid, not eligible for review. Incomplete productization or validation answers will not invalidate your entry, but they will noticeably lower your score.
+{% endhint %}
+
+### Track Materials ↔ How to Fill the Form
+
+Each track has **no separate upload control** — all files/links go in **"Submission Materials Link"**; written descriptions go in **"Project Description"**. This table maps to the three tracks to avoid omissions:
+
+<table><thead><tr><th>Track</th><th width="245.3046875">Required Materials</th><th>In "Project Description"</th><th>In "Submission Materials Link"</th></tr></thead><tbody><tr><td>🟦 Alpha Factory</td><td>Alpha source (signal / spread logic)</td><td>✅</td><td>—</td></tr><tr><td></td><td>Strategy code</td><td>—</td><td>✅ GitHub, etc.</td></tr><tr><td></td><td>Backtest record (total period ≥60 days, out-of-sample ≥30 days; market-making strategies may substitute with continuous high/low volatility records)</td><td>Summary metrics OK</td><td>✅ Data / report links</td></tr><tr><td>🟩 Agentic Trading</td><td>Event → decision → execution flow description</td><td>✅</td><td>Optional video / Demo link</td></tr><tr><td></td><td>Runnable Demo</td><td>—</td><td>✅</td></tr><tr><td></td><td>Paper trading log (run during competition period, recommended ≥2 weeks)</td><td>—</td><td>✅ Log / GitHub links</td></tr><tr><td>🟧 AI Trading Desk</td><td>Complete research task (question → actionable insight)</td><td>✅ Describe scenario &#x26; conclusions</td><td>✅ Demo + optional screen recording link</td></tr><tr><td></td><td>Accessible Demo</td><td>—</td><td>✅</td></tr><tr><td><strong>All Tracks</strong></td><td>Target user &#x26; product value, validation data &#x26; key metrics</td><td>✅ Project description, parts 2–3</td><td>✅ Full data/report, if available</td></tr><tr><td><strong>All Tracks</strong></td><td>Role of the LLM in your project (incl. Qwen usage; skip if no credits)</td><td>✅ Separate field</td><td>—</td></tr><tr><td><strong>All Tracks</strong></td><td>Compliant X post</td><td>—</td><td>✅ Separate field "X Promotional Post Link"</td></tr></tbody></table>
+
+**Open Theme:** Select "Open Theme" for the corresponding track in the form; clearly describe your custom direction and validation approach in **Project Description** — no extra fields needed.
+
+**Multiple themes:** On second submission, **re-select track + sub-theme**, use a different **project name** and full set of materials; **Bitget UID / team info** may be the same.
+
+### 🟦 Track 1 · Alpha Factory (Quantitative Strategies)
+
+**Positioning:** Use AI to build runnable US stock quantitative / algorithmic trading strategies. AI is a tool for strategy development (writing code, optimizing parameters, generating signals); the core is strategy effectiveness and verifiability.
+
+**Submission requirements:** Runnable strategy code + verifiable backtest or paper trading data (see required materials below)
+
+**Sub-theme guide (select in form at submission; optional, not mandatory):**
+
+| Sub-Theme                           | Core Logic                                                                                                                              | Example Approaches                                                                                                                                                                                                                                                                                                                                                                                                              |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Arbitrage                           | Instantaneous spreads between rToken and native stock / cross-platform, plus NAV premium/discount arbitrage under mint/redeem mechanics | Sell when rToken price > NAV via mint; cross-platform spreads; same-underlying different issuers (Ondo, xStocks, etc.)                                                                                                                                                                                                                                                                                                          |
+| After-Hours Information Pricing     | Macro events continue during US market closures while rToken trades 7×24, pricing information in advance                                | Build rToken positions on weekend geopolitical/policy events; hedge after overnight macro decisions; close positions before Monday open                                                                                                                                                                                                                                                                                         |
+| Cross-Market Correlation Strategies | Correlation shifts between rToken and native stock across time periods; rToken ↔ Crypto cross-asset correlation                         | Pre/post-market pairs trading; mean-reversion when rToken overreacts to macro shocks while native stock hasn't                                                                                                                                                                                                                                                                                                                  |
+| rToken Factor Strategies            | Traditional factors behave differently under rToken's low-liquidity, retail-dominated market structure                                  | rToken momentum vs native stock; mean reversion in closed-market windows; factor divergence arbitrage                                                                                                                                                                                                                                                                                                                           |
+| Cross-Asset Allocation / Rotation   | Asset switching driven by macro factors, capital flows, risk appetite                                                                   | Risk-on/off rotation (US stocks ↔ Crypto ↔ commodities); sector rotation; weekend position hedging                                                                                                                                                                                                                                                                                                                              |
+| **Open Theme**                      | Not among the above 5 directions, but centered on US stock AI quant strategies                                                          | Possible directions include, but are not limited to, **execution-aware alpha** that incorporates fees, slippage, funding, market impact, and strategy capacity; or **market regime / adaptive portfolio** systems that adjust signals, positions, and risk budgets across market regimes. These are examples, not additional named themes. Describe your strategy logic and validation approach; **top 1 each of 2 open slots** |
+
+#### Required Materials
+
+| Material                                         | Requirements                                                                                                                                                           |
+| ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Alpha source description (signal / spread logic) | Required (in form "Project Description")                                                                                                                               |
+| Strategy code                                    | Required (link in "Submission Materials Link")                                                                                                                         |
+| Backtest record                                  | Required (total period ≥ 60 days, out-of-sample validation ≥ 30 days; market-making strategies may substitute with continuous high/low volatility environment records) |
+| Compliant X post link                            | **Required**                                                                                                                                                           |
+
+**Judging focus:** Sharpe, Sortino, max drawdown, turnover; out-of-sample Sharpe decay (reference alert: OS < 0.5×IS); rolling 30-day Sharpe stability.
+
+**Scoring mechanism:** Pure quantitative scoring.
+
+### 🟩 Track 2 · Agentic Trading (Agent Trading)
+
+**Positioning:** The LLM is the primary trading decision-maker, not just an assistant. The Agent must sense the environment, make independent judgments, and autonomously place orders with risk controls.
+
+**Submission requirements:** Runnable Demo + demonstrate a complete event → decision → execution flow (simulated or paper trading acceptable)
+
+**Sub-theme guide (select in form at submission; optional, not mandatory):**
+
+| Sub-Theme                     | Core Question                                                                                                      | Example Approaches                                                                                                                                                                                                                                                                                                                                                                                    |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Event-Driven Agent            | How do news / announcements / macro events drive autonomous Agent trading?                                         | Policy speech → LLM interpretation → rebalance; earnings beat → add position; rate decision → hedge rotation                                                                                                                                                                                                                                                                                          |
+| Market Sentiment Agent        | How does real-time social / forum / X sentiment translate into position signals?                                   | FOMO detection → contrarian hedge; sentiment top detection; reduce before overheating                                                                                                                                                                                                                                                                                                                 |
+| Earnings-Driven Trading Agent | How does the Agent autonomously interpret earnings / conference calls and execute?                                 | EPS beat → add; guidance cut → reduce; post-earnings anomaly tracking                                                                                                                                                                                                                                                                                                                                 |
+| Cross-Asset Execution Agent   | How does the Agent manage rToken and Crypto positions simultaneously?                                              | Hedge Crypto when rToken anomalies; dynamic cross-market allocation after macro shocks                                                                                                                                                                                                                                                                                                                |
+| Factor Discovery Agent        | How does the Agent autonomously propose hypotheses, discover alpha factors, and translate into tradable decisions? | Agent proposes hypotheses, mines factors, backtests iteratively; autonomously trades after validation                                                                                                                                                                                                                                                                                                 |
+| **Open Theme (Custom)**       | LLM-autonomous decision-making + Agent system with trading output                                                  | Possible directions include, but are not limited to, **Agent evaluation / benchmarks** covering decision consistency, risk-violation rate, max drawdown, stress behavior, human-takeover rate, and incremental value over fixed-rule or Human + AI baselines. This is an example, not an additional named theme. Describe decision logic and paper-trading validation; **top 1 each of 2 open slots** |
+
+#### Required Materials
+
+| Material                                        | Requirements                                                                                                 |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Runnable Demo                                   | Required                                                                                                     |
+| Event → decision → execution flow demonstration | Required                                                                                                     |
+| Paper trading log                               | Required (actually run during competition period, recommended ≥2 weeks; starting 9/3 meets minimum duration) |
+| Compliant X post link                           | **Required**                                                                                                 |
+
+**Judging focus:** Paper trading Sharpe, max drawdown, win rate; decision explainability; Agent architecture quality; risk control layer effectiveness.
+
+**Scoring mechanism:** 50% quantitative + 50% judge scoring.
+
+### 🟧 Track 3 · AI Trading Desk (AI Research Workbench)
+
+**Positioning:** A natural-language-driven AI research workbench. AI processes information, invokes tools, and presents analysis; human traders make final decisions.
+
+**Submission requirements:** Accessible Demo + demonstrate one complete research task (full flow from question to actionable insight)
+
+**Sub-theme guide (select in form at submission; optional, not mandatory):**
+
+| Sub-Theme                                  | Core Question                                                                           | Example Approaches                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Information Extraction & Signal Generation | How does AI process unstructured info from earnings, macro, news?                       | Conference call summary + expectation gap detection; rate/inflation/geopolitical transmission chains                                                                                                                                                                                                                                                                                                                      |
+| Review & Self-Evolution                    | After trading, how does AI help the trader review and iterate their research framework? | Auto-generated review reports; identify bad decision patterns; reusable checklists                                                                                                                                                                                                                                                                                                                                        |
+| Decision Stress Testing                    | Before opening a position, how does AI retrieve historically similar scenarios?         | Input trade idea → retrieve historical distribution; preset stress tests                                                                                                                                                                                                                                                                                                                                                  |
+| Personalized Research Workbench            | How to build a customized workbench with a clear thesis?                                | Tech-stock event-driven workflow; macro quant toolset                                                                                                                                                                                                                                                                                                                                                                     |
+| Execution Assistance                       | After trader decision, how does AI handle order splitting and slippage management?      | Large order splitting; order book depth analysis; slippage pattern adjustment                                                                                                                                                                                                                                                                                                                                             |
+| **Open Theme**                             | AI-assisted tools / workbench / LUI for human traders                                   | Possible directions include, but are not limited to, a **portfolio-aware AI PM / Portfolio Copilot** that evaluates how a proposed trade changes beta, sector and factor exposures, correlation, and concentration across an existing portfolio, with stress tests or hedge suggestions. This is an example, not an additional named theme. Describe core features and research scenarios; **top 1 each of 2 open slots** |
+
+| Material                                                                    | Requirements |
+| --------------------------------------------------------------------------- | ------------ |
+| Accessible Demo                                                             | Required     |
+| Complete research task demo (full flow from question to actionable insight) | Required     |
+| Compliant X post link                                                       | **Required** |
+
+**Judging focus:** Feature depth (data sources / Skill integration count and effectiveness), research quality, LUI fluency, personalized thesis.
+
+**Scoring mechanism:** Pure judge subjective scoring.
+
+### Submission FAQ
+
+<details>
+
+<summary>Q: Is an X post required?</summary>
+
+Yes. Submission must include **at least 1** compliant X post link — content must introduce the product / Agent / strategy you're building (interactive promotional post, dev log, demo showcase, etc.), including `#BitgetHackathon` and `@Bitget_AI`. You must also retweet \[TBD: X link]. Pure retweets or posts with no substantive introduction = incomplete submission.
+
+</details>
+
+<details>
+
+<summary>Q: How many tracks / themes can I enter?</summary>
+
+A team may submit to at most 2 different themes; each must be an independent project entered through a separate form submission.
+
+</details>
+
+<details>
+
+<summary>Q: Can I resubmit an S1 project with minor changes?</summary>
+
+Simply renaming or making minor edits to an S1 project **does not count as a valid submission**. If continuing an S1 direction, you must describe **substantive new additions** in the form; judging evaluates based on the new content.
+
+</details>
+
+<details>
+
+<summary>Q: Must I pick a sub-theme? What award if I don't?</summary>
+
+Not mandatory. Pick a named sub-theme → compete for Theme Prize (1 winner per sub-theme); pick Open Theme → compete for Open Theme Prize (2 open slots per track, top 1 each). Award rules in **Chapter II**.
+
+</details>
+
+<details>
+
+<summary>Q: Where does the project description go?</summary>
+
+Must be written completely in the Google Form "Project Description" field; GitHub README or X Thread cannot substitute.
+
+</details>
+
+<details>
+
+<summary>Q: How do I submit materials?</summary>
+
+Put all links in the single **"Submission Materials Link"** field (Demo, GitHub, video, backtest, paper trading logs, etc.); required materials by track in **"Track Materials ↔ How to Fill the Form"** in this chapter.
+
+</details>
+
+<details>
+
+<summary>Q: What fields are in the form?</summary>
+
+Subject to the official Google Form link. Beyond team and project basics, **target user & product value** and **validation data & key metrics** are written as parts 2 and 3 of the single "Project Description" question rather than as separate sub-questions, plus one standalone field: **"Role of the LLM in Your Project"**. Required materials by track are listed in **"Track Materials ↔ How to Fill the Form"** in this chapter.
+
+</details>
+
+<details>
+
+<summary>Q: I can't answer the target-user and validation parts — my entry is just a strategy / tool.</summary>
+
+You still need to write them, but you do not need real users yet. Name a specific user segment, not "all traders". Usage / distribution results may be **targets** (e.g. "aiming for 50 users in month one") as long as you label them as targets. Incomplete answers will not invalidate a submission, but they affect how judges assess maturity.
+
+</details>
+
+<details>
+
+<summary>Q: I didn't get Qwen credits — do I still fill in "Role of the LLM in Your Project"?</summary>
+
+Yes, but only describe the models you actually used and what they do (coding, extraction, signal reasoning, agent decisions, etc.). **You can skip the Qwen part; it does not affect judging.**
+
+</details>
+
+<details>
+
+<summary>Q: Do S1 participants need to fill in anything extra?</summary>
+
+Select "Are you an S1 participant/team" = Yes, and fill in **"Substantive New Additions"**; simple rename/resubmit is invalid. See **Q: Can I resubmit an S1 project with minor changes?** above.
+
+</details>
+
+<details>
+
+<summary>Q: How do I enter the University Special Prize?</summary>
+
+For university students / clubs / campus teams: submit to any main track and fill in the full university name in **"University Name"**. **If the entry already won a main-track prize, it is no longer eligible for University Special Prize**; leave university name blank and you won't be evaluated.
+
+</details>
+
+<details>
+
+<summary>Q: How do I apply for Demo Day?</summary>
+
+Check **"Apply for Demo Day"** in Google Form at submission; **all teams may check this box**. Post-event **priority invitation for winning or high-scoring quality projects**; final list selected by ops / judges. See **Chapter II · I. For Participants · Beyond Cash Prizes**.
+
+</details>
+
+<details>
+
+<summary>Q: Is there a Token participation prize?</summary>
+
+Yes. It has two separate parts:
+
+* **Qwen build credits during the competition:** Apply through the separate Google Form \[TBD: Qwen application link]. Bitget checks KYC status every 24 hours; the first 300 teams that apply and pass Bitget KYC may receive 30U-equivalent credits via the official Telegram community. Applying for Qwen is not hackathon registration and is not required to compete.
+* **K3 post-event subsidy:** Select “Apply for K3 Token Subsidy” in the project submission form. Opted-in teams whose projects are confirmed as valid submissions may receive 30U-equivalent credits after the event.
+* Teams qualifying for both may receive up to **60U equivalent in Token credits**.
+
+</details>
+
+## V. Developer Toolkit
+
+### Bitget Agent Hub (Trading Arsenal for Crypto & US Stock Agents)
+
+[Bitget Agent Hub](https://github.com/BitgetLimited/agent_hub) is a trading tools platform built for AI developers: operate your Bitget account directly inside **the AI tools you already use** (Claude, Cursor, Codex, etc.) — check markets, run analysis, place orders, manage the account, write strategies, all within the conversation, without switching back to the exchange. Use the layers you need:
+
+| Module                    | Contents                                                                                                                                                                                            | How It Helps                                                                                                                            |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| **MCP Server**            | One-line config for Claude Desktop / Cursor / Windsurf / ChatGPT Desktop                                                                                                                            | Call Bitget trading capabilities from the AI tool you already use                                                                       |
+| **CLI**                   | `bgc` terminal trading tool for Claude Code / Codex CLI / OpenClaw                                                                                                                                  | Let terminal-based AI run trading commands directly                                                                                     |
+| **Tools**                 | 89 UTA v3 operations (market data, spot, futures, account & funds, sub-accounts, loans, tax), condensed into 14 intent verbs                                                                        | Full capability without context bloat; agents follow discover → drill down → execute                                                    |
+| **Skills**                | Trading Skills (when to call a tool, whether to confirm before ordering) + `bitget-signal`'s 5 research Skills (macro, market intel, sentiment, technical, news — **no account or API key needed**) | Common research and trading logic pre-packaged — a few lines of config give your Agent market awareness and execution discipline        |
+| **Agentic Account**       | A dedicated Agent sub-account: fund isolation, quota control, no withdrawals; connects via OAuth with no manual API key                                                                             | Allocate a separate pot of capital for your Agent without touching main-account funds — especially useful for the Agentic Trading track |
+| **Market & Account Data** | Real-time market, account, and trade data covering Crypto and US stocks (US stock futures live, spot on the roadmap)                                                                                | Pull data straight into backtests, paper trading, and demos instead of stitching sources together                                       |
+
+**Copy this prompt to your Agent to install Agent Hub and authorize an Agentic account automatically:**
+
+```
+Please read https://www.bitget.careers/support/articles/12560603894122
+and help me complete the Bitget Agentic account authorization process.
+```
+
+{% hint style="info" %}
+**Strongly recommended during the hackathon — run in safe mode first:** add `--read-only` for a fully read-only session, or `--paper-trading` to route to Bitget's Demo environment (requires a separate Demo API Key). The latter both validates your pipeline and produces exactly the paper-trading logs required by the Agentic Trading track. High-risk operations (`cancelAll`, withdrawals) require explicit confirmation by default, and any write can be previewed with `dryRun`.
+{% endhint %}
+
+**Research Skills (`bitget-signal`) — 5 out-of-the-box, no account or API key required:**
+
+<table><thead><tr><th width="225.43359375">Skill</th><th>Capabilities</th></tr></thead><tbody><tr><td><code>macro-analyst</code></td><td>Macro &#x26; cross-asset analysis: Fed policy, BTC vs DXY / Nasdaq / Gold</td></tr><tr><td><code>market-intel</code></td><td>On-chain &#x26; institutional intelligence: ETF flows, whale activity, DeFi TVL</td></tr><tr><td><code>news-briefing</code></td><td>News aggregation &#x26; narrative synthesis: morning briefings, keyword search</td></tr><tr><td><code>sentiment-analyst</code></td><td>Sentiment &#x26; positioning analysis: Fear &#x26; Greed Index, long/short ratio, funding rates</td></tr><tr><td><code>technical-analysis</code></td><td>Technical analysis: 23 indicators across 6 categories</td></tr></tbody></table>
+
+> **S2 tip:** Alpha Factory can use Playbook for backtesting; Agentic Trading is best run on an Agentic account — isolated funds, ready right after authorization — with the flow built on Agent Hub Tools + MCP; AI Trading Desk can combine `bitget-signal`'s research Skills as its perception layer.
+
+### Bitget Playbook (Quant Copilot for Crypto & US Stocks)
+
+[Bitget Playbook](https://www.bitget.com/zh-CN/activity/ai-get-agent/playbook?tab=explore) is an AI-driven quantitative strategy platform. Describe trading ideas in natural language, AI generates executable strategies, backtests on real historical data, view PnL, max drawdown, Sharpe ratio and other metrics, deploy with one click for automated execution.
+
+**S2 access:** Log in to Playbook with your Bitget account. Alpha Factory track can use it directly for strategy backtesting and validation.
+
+### Qwen Token Subsidy (During the Hackathon)
+
+The first **300 teams** that complete the application and pass **Bitget KYC** will receive **$30 USD equivalent** in Alibaba Cloud Qwen Token credits per team, based on the team captain’s UID.
+
+<table><thead><tr><th width="154">Item</th><th>Details</th></tr></thead><tbody><tr><td>Distribution</td><td>Complete a separate Qwen Token Application Form (separate from the project submission form). Bitget verifies KYC every 24 hours. Once approved, contact an admin in the official Telegram community to claim your credits.</td></tr><tr><td>Eligible tools</td><td>Major coding agents such as Cursor and Codex (Claude Code is not supported at this time)</td></tr><tr><td>Important notes</td><td>Applying for Qwen Token credits does not count as hackathon registration. You must still submit your project materials as usual. Teams that do not apply may still participate in the hackathon normally.</td></tr></tbody></table>
+
+**Qwen Setup Guide**
+
+| Setting             | Value                                |
+| ------------------- | ------------------------------------ |
+| Base URL            | `https://hackathon.bitgetops.com/v1` |
+| Model (recommended) | `qwen3.8-max`                        |
+
+#### Qwen in Codex
+
+{% stepper %}
+{% step %}
+***Codex Step 1: Edit config.toml***
+
+In Codex App: Settings → Config → Open config.toml.&#x20;
+
+<div><figure><img src="https://4159876802-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2Fb2DlDNGElVL5rbNQklOV%2Fuploads%2Fbhb96JJBeK4CgMos6FaM%2Fimage.png?alt=media&amp;token=7b8ecfa7-ef8e-4f21-bdb0-39a12341ee64" alt=""><figcaption></figcaption></figure> <figure><img src="https://4159876802-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2Fb2DlDNGElVL5rbNQklOV%2Fuploads%2FKyEynr7PZ1R099k0VlTe%2Fimage.png?alt=media&amp;token=3452c5dc-d2c5-40e9-977f-e20d86961be0" alt=""><figcaption></figcaption></figure></div>
+
+Add the following at the top (`model_provider` may not exist by default):
+
+```toml
+model = "qwen3.8-max"
+model_provider = "bitget-qwen"
+
+[model_providers.bitget-qwen]
+name = "Bitget Qwen"
+base_url = "https://hackathon.bitgetops.com/v1"
+env_key = "BITGET_QWEN_API_KEY"
+wire_api = "responses"
+```
+
+{% endstep %}
+
+{% step %}
+***Codex Step 2: Set the API Key***
+
+```bash
+## Do not write the key into config.toml. Run in Terminal:
+launchctl setenv BITGET_QWEN_API_KEY 'your real key'
+
+## Verify: output means the key is set.
+launchctl getenv BITGET_QWEN_API_KEY
+
+```
+
+<figure><img src="https://4159876802-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2Fb2DlDNGElVL5rbNQklOV%2Fuploads%2Fse0G79vyOej79zEkAkI9%2Fimage.png?alt=media&amp;token=06c333f5-52dc-4253-af7e-7e91caeeeefc" alt=""><figcaption></figcaption></figure>
+{% endstep %}
+
+{% step %}
+***Codex Step 3: Restart Codex App***
+
+Complete Step 2 first, then fully quit Codex (Cmd+Q, not just close the window) and reopen.
+{% endstep %}
+
+{% step %}
+***Codex Step 4: Confirm you're using Qwen***
+
+* Check the bottom-right corner: should show `Bitget Qwen`, not GPT-5.5
+* Terminal: `/Applications/Codex.app/Contents/Resources/codex doctor | grep model` — expected output includes `qwen3.8-max`
+
+<figure><img src="https://4159876802-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2Fb2DlDNGElVL5rbNQklOV%2Fuploads%2FijzpQtwGhsfb2pCCR9Q3%2Fimage.png?alt=media&amp;token=4b7b9ae0-80f9-4f86-b0cf-093110e498a3" alt=""><figcaption></figcaption></figure>
+{% endstep %}
+{% endstepper %}
+
+#### Qwen in Cursor
+
+{% stepper %}
+{% step %}
+***Cursor Step 1: Open model settings***
+
+Cursor Settings, or `Cmd+Shift+J` (macOS) / `Ctrl+Shift+J` (Windows), select Models in the left sidebar.<br>
+
+<figure><img src="https://4159876802-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2Fb2DlDNGElVL5rbNQklOV%2Fuploads%2FFc4gW6sq6rP6a4HkslsJ%2Fimage.png?alt=media&amp;token=d370d655-62d3-40f7-b7b1-fa68dd92f8e3" alt=""><figcaption></figcaption></figure>
+{% endstep %}
+
+{% step %}
+***Cursor Step 2: Enter the API Key &*****&#x20;Enable Base URL override**
+
+* Paste your key into the OpenAI API Key field. Click Verify to confirm.
+* Turn on Override OpenAI Base URL and enter (The `/v1` suffix is required.)
+
+```
+https://hackathon.bitgetops.com/v1
+```
+
+<figure><img src="https://4159876802-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2Fb2DlDNGElVL5rbNQklOV%2Fuploads%2FLmw7BrtiB9frZgr4Jp2x%2Fimage.png?alt=media&amp;token=985e826d-673d-4ce2-8ecd-d565a8fcae54" alt=""><figcaption></figcaption></figure>
+{% endstep %}
+
+{% step %}
+***Cursor Step 4: Add custom models***
+
+Click `+ Add model`, enter `qwen3.8-max`, press Enter and ensure it's enabled. For the fast variant, add `qwen3.8-max`.
+
+<div><figure><img src="https://4159876802-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2Fb2DlDNGElVL5rbNQklOV%2Fuploads%2FkKik6Qz94hDmFvev0xWx%2Fimage.png?alt=media&amp;token=02f43456-c92a-45d8-8059-ba620b1b0cd5" alt=""><figcaption></figcaption></figure> <figure><img src="https://4159876802-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2Fb2DlDNGElVL5rbNQklOV%2Fuploads%2FBt4An7UmEXCfCAlXk5lc%2Fimage.png?alt=media&amp;token=61137db1-3096-4ee2-937e-9c07e2ee840b" alt=""><figcaption></figcaption></figure></div>
+{% endstep %}
+
+{% step %}
+***Cursor Step 5: Select the model and test***
+
+Open Chat / Agent, select `qwen3.8-max` from the model dropdown, send a test message to confirm it works.
+
+<figure><img src="https://4159876802-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2Fb2DlDNGElVL5rbNQklOV%2Fuploads%2Fgpxd4fSljg2rGINGj6fW%2Fimage.png?alt=media&amp;token=6733cb8b-fa72-462d-9e1b-0f8d907e1169" alt=""><figcaption></figcaption></figure>
+{% endstep %}
+{% endstepper %}
+
+### Resources & Contact
+
+| Resource                        | Link                                                                                             |
+| ------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Submission Portal (Google Form) | [https://forms.gle/GyWZCMCPocgJdJon6 ](<https://forms.gle/GyWZCMCPocgJdJon6 >)                   |
+| Official Telegram               | [Join Community](https://t.me/+o1tYqQ_lXxllYjgy)                                                 |
+| Event Landing Page              | [bitget.com/activity-hub/hackathon](https://www.bitget.com/activity-hub/hackathon)               |
+| S2 Handbook Reference           | [bitget-ai.gitbook.io/bitgetai\_hackathons2](https://bitget-ai.gitbook.io/bitgetai_hackathons2/) |
+| Agent Hub GitHub                | [BitgetLimited/agent\_hub](https://github.com/BitgetLimited/agent_hub)                           |
+| Bitget Playbook                 | [Playbook Platform](https://www.bitget.com/zh-CN/activity/ai-get-agent/playbook?tab=explore)     |
+| Official X                      | [@Bitget\_AI](https://x.com/Bitget_AI)                                                           |
+| Public Voting Post              | \[TBD: To be published from 9/22]                                                                |
+
+## VI. FAQ
+
+<details>
+
+<summary>Q: Can I participate without trading experience?</summary>
+
+Yes. All tracks accept backtest, simulated, or paper trading as validation materials. See required materials in **Chapter IV**.
+
+</details>
+
+<details>
+
+<summary>Q: Can I participate solo?</summary>
+
+Yes, individuals and teams have equal opportunity. For solo participation, enter "Individual" in the form's "Team Members" field.
+
+</details>
+
+<details>
+
+<summary>Q: What is Demo Day? How do I apply?</summary>
+
+Demo Day is a **post-10/8** resource connection event (internships, beta access, investor networks, etc.) — **not a cash prize**. Check **"Apply for Demo Day"** in Google Form at submission; **all teams may check this box**; priority for winners or high-scoring projects. See **Chapter II · I. For Participants · Beyond Cash Prizes**.
+
+</details>
+
+<details>
+
+<summary>Q: How do I participate in the Best Spread Award?</summary>
+
+Post progress on X while building; attach compliant X post at submission on 9/23; judges review your own/team data (excluding KOL ghost-posting); mutually exclusive with Theme/Open/Grand Prize. See **Chapter II · I. For Participants · 3**.
+
+</details>
+
+<details>
+
+<summary>Q: How do I participate in public voting?</summary>
+
+9/24 – 9/29, comment project ID in the official voting post; 1 vote per account. No need to compete to vote; chase **Lucky Draw / Prediction prizes** (for voting audience). See **Chapter II · II. For the Audience**.
+
+</details>
+
+<details>
+
+<summary>Q: How do I use Bitget Agent Hub?</summary>
+
+It depends on where your AI lives: terminal AI (Claude Code / Codex / OpenClaw) installs the `bgc` CLI + Skills, desktop AI (Claude Desktop / Cursor / Windsurf) registers the MCP Server; the research Skills work with no API key at all. For credentials we recommend an Agentic account via OAuth (isolated funds, no manual keys), though a regular account with a manual API Key also works. Detailed commands in **Chapter V**.
+
+</details>
+
+<details>
+
+<summary>Q: What if I run into technical issues?</summary>
+
+Join the [official Telegram community](https://t.me/+o1tYqQ_lXxllYjgy) to ask questions.
+
+</details>
+
+Bitget AI Base Camp is a long-term program. S2 turns the lens to the intersection of tokenized US stocks and AI trading.
+
+Join us. — Bitget AI Team
