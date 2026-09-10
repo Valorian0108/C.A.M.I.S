@@ -26,7 +26,7 @@ import {
   type EventKey,
   type ScenarioKey,
 } from "./simulator";
-import { apiClient } from "../../lib/api-client";
+import { apiClient } from "@/lib/api-client";
 
 const SCENARIOS: Array<{
   key: ScenarioKey;
