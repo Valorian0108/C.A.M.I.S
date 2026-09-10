@@ -1,3 +1,9 @@
+import {
+  fetchMarketResearch,
+  formatMarketResearchForPrompt,
+  type MarketResearchData
+} from './bitget-signal-service.js';
+
 interface QwenMessage {
   role: 'system' | 'user' | 'assistant';
   content: string;
@@ -51,6 +57,7 @@ export class QwenService {
       liquidationDistance: number;
     };
     recommendedAction: string;
+    marketResearch?: MarketResearchData;
   }): Promise<string> {
     const systemPrompt = `You are a margin risk analyst for leveraged rToken traders. Explain corporate action impacts in clear, actionable language. Focus on:
 1. What changed and why
@@ -78,7 +85,9 @@ AFTER:
 
 Recommended Action: ${simulationData.recommendedAction}
 
-Provide a clear explanation of what happened, the risk implications, and whether the recommended action is appropriate.`;
+${simulationData.marketResearch ? formatMarketResearchForPrompt(simulationData.marketResearch) : ''}
+
+Provide a clear explanation of what happened, the risk implications, and whether the recommended action is appropriate. If market research data is available, incorporate it into your analysis to provide additional context about current market conditions.`;
 
     try {
       const response = await fetch(`${this.baseUrl}/chat/completions`, {

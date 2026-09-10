@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
 import { z } from "zod";
 import { qwenService } from "../lib/qwen-service";
+import { fetchMarketResearch } from "../lib/bitget-signal-service";
 
 const router: IRouter = Router();
 
@@ -21,6 +22,7 @@ const MarginExplanationRequestSchema = z.object({
     liquidationDistance: z.number(),
   }),
   recommendedAction: z.string(),
+  includeMarketResearch: z.boolean().optional().default(false),
 });
 
 router.post("/margin-explanation", async (req, res) => {
@@ -28,13 +30,29 @@ router.post("/margin-explanation", async (req, res) => {
     // Validate request body
     const validatedData = MarginExplanationRequestSchema.parse(req.body);
 
-    // Generate explanation using Qwen
-    const explanation = await qwenService.generateExplanation(validatedData);
+    // Fetch market research if requested
+    let marketResearch;
+    let marketResearchSource = 'none';
+    if (validatedData.includeMarketResearch) {
+      const researchResponse = await fetchMarketResearch(validatedData.token);
+      if (researchResponse.success && researchResponse.data) {
+        marketResearch = researchResponse.data;
+        marketResearchSource = researchResponse.source;
+      }
+    }
+
+    // Generate explanation using Qwen with optional market research
+    const explanation = await qwenService.generateExplanation({
+      ...validatedData,
+      marketResearch
+    });
 
     res.json({
       success: true,
       explanation,
       timestamp: new Date().toISOString(),
+      marketResearchIncluded: !!marketResearch,
+      marketResearchSource,
     });
   } catch (error) {
     console.error('Margin explanation error:', error);

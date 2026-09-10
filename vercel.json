@@ -3,9 +3,13 @@
   "builds": [
     {
       "src": "artifacts/api-server/package.json",
-      "use": "@vercel/node",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "artifacts/mockup-sandbox/package.json",
+      "use": "@vercel/static-build",
       "config": {
-        "outputDirectory": "artifacts/api-server/dist"
+        "distDir": "dist"
       }
     }
   ],
@@ -13,10 +17,22 @@
     {
       "src": "/api/(.*)",
       "dest": "/artifacts/api-server/dist/index.mjs"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/artifacts/mockup-sandbox/dist/$1"
     }
   ],
   "env": {
-    "PORT": "5000",
-    "NODE_ENV": "production"
+    "BITGET_QWEN_API_KEY": "@bitget-qwen-api-key",
+    "BITGET_QWEN_BASE_URL": "@bitget-qwen-base-url",
+    "BITGET_QWEN_MODEL": "@bitget-qwen-model",
+    "ALPACA_API_KEY": "@alpaca-api-key",
+    "ALPACA_SECRET_KEY": "@alpaca-secret-key",
+    "ALPACA_BASE_URL": "@alpaca-base-url",
+    "BITGET_API_KEY": "@bitget-api-key",
+    "BITGET_SECRET_KEY": "@bitget-secret-key",
+    "BITGET_PASSPHRASE": "@bitget-passphrase",
+    "BITGET_API_BASE_URL": "@bitget-api-base-url"
   }
 }

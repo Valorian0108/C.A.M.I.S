@@ -39,6 +39,30 @@ export interface CollateralInfo {
   isEligible: boolean;
 }
 
+export interface MarketResearchData {
+  fearGreedIndex?: number;
+  fearGreedSentiment?: string;
+  longShortRatio?: number;
+  fundingRates?: Record<string, number>;
+  marketSentiment?: string;
+  technicalIndicators?: {
+    rsi?: number;
+    macd?: number;
+    support?: number;
+    resistance?: number;
+  };
+  whaleActivity?: {
+    inflows?: number;
+    outflows?: number;
+    netFlow?: number;
+  };
+  macroContext?: {
+    fedPolicy?: string;
+    btcCorrelation?: number;
+    dxy?: number;
+  };
+}
+
 class ApiClient {
   private baseUrl: string;
 
@@ -90,13 +114,21 @@ class ApiClient {
     beforeState: MarginSnapshot;
     afterState: MarginSnapshot;
     recommendedAction: string;
-  }): Promise<{ success: boolean; explanation: string; timestamp: string }> {
-    return this.request<{ success: boolean; explanation: string; timestamp: string }>(
+    includeMarketResearch?: boolean;
+  }): Promise<{ success: boolean; explanation: string; timestamp: string; marketResearchIncluded?: boolean; marketResearchSource?: string }> {
+    return this.request<{ success: boolean; explanation: string; timestamp: string; marketResearchIncluded?: boolean; marketResearchSource?: string }>(
       '/margin-explanation',
       {
         method: 'POST',
         body: JSON.stringify(data),
       }
+    );
+  }
+
+  async getMarketResearch(symbol?: string): Promise<{ success: boolean; data?: MarketResearchData; source: string; error?: string }> {
+    const params = symbol ? `?symbol=${symbol}` : '';
+    return this.request<{ success: boolean; data?: MarketResearchData; source: string; error?: string }>(
+      `/market-research${params}`
     );
   }
 }
