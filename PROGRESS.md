@@ -2,6 +2,30 @@
 
 This file records the implementation state for each implementation push. Each entry should describe what changed, how it was checked, and what comes next.
 
+## 2026-09-10 — Deterministic event model
+
+### Completed
+
+- Added a local simulator model for corporate-action events.
+- Moved the rNVDA before/after values into explicit fixture data.
+- Added deterministic delta calculation and shared number formatting.
+- Connected the selected event to the hero, consequence table, ratio panel, evidence trail, and scenario comparison.
+- Made queued rTSLA and rQQQ events show an honest not-modeled state instead of reusing rNVDA numbers.
+- Preserved the existing MARGIN//EVENT visual direction and responsive behavior.
+
+### Verification
+
+- Mockup sandbox typecheck passed.
+- Production build passed with the required preview environment values.
+- Preview workflow restarted successfully.
+- Desktop and mobile screenshots rendered without browser console errors.
+
+### Next
+
+1. Graduate the demo into a shareable application route.
+2. Add a server-side Qwen explanation flow over the deterministic simulator output.
+3. Replace the rNVDA fixture with validated event and account inputs.
+
 ## 2026-09-10 — Documentation and hackathon alignment
 
 ### Completed

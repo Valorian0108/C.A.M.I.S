@@ -15,45 +15,17 @@ import {
 } from "lucide-react";
 
 import "./_group.css";
-
-type EventKey = "rNVDA" | "rTSLA" | "rQQQ";
-type ScenarioKey = "hold" | "add" | "reduce";
-
-type EventRow = {
-  key: EventKey;
-  kind: string;
-  state: string;
-  title: string;
-  subtitle: string;
-  countdown: string;
-};
-
-const EVENTS: EventRow[] = [
-  {
-    key: "rNVDA",
-    kind: "reverse split / adjustment",
-    state: "selected",
-    title: "NVIDIA reverse split",
-    subtitle: "Collateral treatment under review",
-    countdown: "18h 42m",
-  },
-  {
-    key: "rTSLA",
-    kind: "corporate action",
-    state: "queued",
-    title: "Tesla adjustment",
-    subtitle: "Event window not opened",
-    countdown: "—",
-  },
-  {
-    key: "rQQQ",
-    kind: "corporate action",
-    state: "queued",
-    title: "Invesco QQQ adjustment",
-    subtitle: "Event window not opened",
-    countdown: "—",
-  },
-];
+import {
+  calculateImpact,
+  EVENT_MODELS,
+  findEvent,
+  formatCurrency,
+  formatPercent,
+  formatSignedCurrency,
+  formatSignedNumber,
+  type EventKey,
+  type ScenarioKey,
+} from "./simulator";
 
 const SCENARIOS: Array<{
   key: ScenarioKey;
@@ -65,19 +37,19 @@ const SCENARIOS: Array<{
     key: "hold",
     name: "Hold",
     copy: "Keep current position through the adjustment.",
-    result: "buffer narrows to 18.2%",
+    result: "wait for the event to settle",
   },
   {
     key: "add",
     name: "Add collateral",
     copy: "Increase collateral before the event window.",
-    result: "distance preserved above 18.2%",
+    result: "restore room before settlement",
   },
   {
     key: "reduce",
     name: "Reduce exposure",
     copy: "Trim rNVDA before the event is applied.",
-    result: "leverage pressure reduced",
+    result: "lower pressure before settlement",
   },
 ];
 
@@ -87,22 +59,24 @@ function MetricRow({
   after,
   delta,
   risk,
+  unavailable,
 }: {
   label: string;
   before: string;
   after: string;
   delta: string;
   risk?: boolean;
+  unavailable?: boolean;
 }) {
   return (
     <div className="me-metric">
       <span className="me-metric-label">{label}</span>
-      <span className="me-metric-value">{before}</span>
+      <span className={`me-metric-value${unavailable ? " muted" : ""}`}>{before}</span>
       <span className="me-metric-arrow" aria-hidden="true">
         →
       </span>
-      <span className="me-metric-value after">{after}</span>
-      <span className={`me-metric-delta${risk ? " risk" : ""}`}>{delta}</span>
+      <span className={`me-metric-value after${unavailable ? " muted" : ""}`}>{after}</span>
+      <span className={`me-metric-delta${risk ? " risk" : ""}${unavailable ? " muted" : ""}`}>{delta}</span>
     </div>
   );
 }
@@ -114,7 +88,8 @@ export function Desk() {
   const [commandQuery, setCommandQuery] = useState("");
   const [investigating, setInvestigating] = useState(false);
 
-  const selectedEvent = EVENTS.find((event) => event.key === selectedKey) ?? EVENTS[0];
+  const selectedEvent = findEvent(selectedKey);
+  const impact = calculateImpact(selectedEvent);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -167,7 +142,7 @@ export function Desk() {
 
           <p className="me-rail-label">Event queue / 03</p>
           <nav className="me-event-list" aria-label="Corporate action events">
-            {EVENTS.map((event) => (
+            {EVENT_MODELS.map((event) => (
               <button
                 className="me-event-row"
                 key={event.key}
@@ -227,15 +202,14 @@ export function Desk() {
                 <span className="me-code">{selectedEvent.kind}</span>
               </div>
               <p className="me-hero-summary">
-                The event changes the <strong>collateral representation</strong>, not the account’s maintenance
-                threshold. Your account remains above maintenance, but the usable buffer gets thinner.
+                 {selectedEvent.summary}
               </p>
             </div>
             <div className="me-countdown" aria-label="Time until event">
               <span className="me-countdown-label">adjustment arrives in</span>
-              <strong className="me-countdown-value">{selectedEvent.key === "rNVDA" ? "18h 42m" : "—"}</strong>
+               <strong className="me-countdown-value">{selectedEvent.countdown}</strong>
               <span className="me-countdown-note">
-                {selectedEvent.key === "rNVDA" ? "pressure is visible before settlement" : "event data not opened"}
+                 {impact ? "pressure is visible before settlement" : "event data not opened"}
               </span>
             </div>
           </section>
@@ -247,27 +221,59 @@ export function Desk() {
             </div>
           )}
 
-          <section className="me-impact" aria-labelledby="impact-heading">
+           <section className={`me-impact${impact ? "" : " is-unavailable"}`} aria-labelledby="impact-heading">
             <div className="me-impact-table">
               <div className="me-section-heading">
                 <h2 id="impact-heading">Account consequence</h2>
                 <span>before → event-applied</span>
               </div>
-              <MetricRow label="Collateral value" before="$18,420" after="$17,912" delta="−$508" risk />
-              <MetricRow label="Account leverage" before="2.8x" after="3.1x" delta="+0.3x" risk />
-              <MetricRow label="Liquidation distance" before="24.6%" after="18.2%" delta="−6.4 pts" risk />
+               <MetricRow
+                 label="Collateral value"
+                 before={selectedEvent.before ? formatCurrency(selectedEvent.before.collateralValue) : "not modeled"}
+                 after={selectedEvent.after ? formatCurrency(selectedEvent.after.collateralValue) : "not modeled"}
+                 delta={impact ? formatSignedCurrency(impact.collateralDelta) : "awaiting inputs"}
+                 risk={Boolean(impact && impact.collateralDelta < 0)}
+                 unavailable={!impact}
+               />
+               <MetricRow
+                 label="Account leverage"
+                 before={selectedEvent.before ? `${selectedEvent.before.leverage.toFixed(1)}x` : "not modeled"}
+                 after={selectedEvent.after ? `${selectedEvent.after.leverage.toFixed(1)}x` : "not modeled"}
+                 delta={impact ? formatSignedNumber(impact.leverageDelta, "x") : "awaiting inputs"}
+                 risk={Boolean(impact && impact.leverageDelta > 0)}
+                 unavailable={!impact}
+               />
+               <MetricRow
+                 label="Liquidation distance"
+                 before={selectedEvent.before ? formatPercent(selectedEvent.before.liquidationDistance) : "not modeled"}
+                 after={selectedEvent.after ? formatPercent(selectedEvent.after.liquidationDistance) : "not modeled"}
+                 delta={impact ? `${formatSignedNumber(impact.liquidationDistanceDelta, " pts")}` : "awaiting inputs"}
+                 risk={Boolean(impact && impact.liquidationDistanceDelta < 0)}
+                 unavailable={!impact}
+               />
             </div>
             <div className="me-ratio-panel">
               <div className="me-ratio-top">
-                <strong>95%</strong>
+               <strong>{selectedEvent.after ? `${selectedEvent.after.collateralRatio}%` : "—"}</strong>
                 <span>collateral ratio<br />maintenance line</span>
               </div>
-              <div className="me-ratio-bar" aria-label="Collateral ratio: 95 percent">
+               <div
+                 className="me-ratio-bar"
+                 aria-label={selectedEvent.after ? `Collateral ratio: ${selectedEvent.after.collateralRatio} percent` : "Collateral ratio not modeled"}
+               >
                 <span className="me-ratio-marker" aria-hidden="true" />
               </div>
               <p className="me-ratio-copy">
-                <ShieldAlert size={13} strokeWidth={1.7} /> Above maintenance. The event removes room to absorb another
-                move.
+                 {impact ? (
+                   <>
+                     <ShieldAlert size={13} strokeWidth={1.7} /> Above maintenance. The event removes room to absorb
+                     another move.
+                   </>
+                 ) : (
+                   <>
+                     <Activity size={13} strokeWidth={1.7} /> No account inputs loaded for this event yet.
+                   </>
+                 )}
               </p>
             </div>
           </section>
@@ -277,8 +283,8 @@ export function Desk() {
               <p className="me-kicker">Evidence trail / plain language</p>
               <h2 id="evidence-heading">What changes when the event hits?</h2>
               <p>
-                rNVDA’s adjustment flows through the collateral ledger. The position is still recognized, but its
-                collateral value is marked lower in this event path. <strong>Nothing is liquidated by this change alone.</strong>
+                 {selectedEvent.eventCopy}{" "}
+                 {impact && <strong>Nothing is liquidated by this change alone.</strong>}
               </p>
               <button className="me-investigate" type="button" onClick={() => setInvestigating((open) => !open)}>
                 {investigating ? "Close investigation" : "Open investigation"}
@@ -291,21 +297,29 @@ export function Desk() {
                 <span className="me-timeline-time">now</span>
                 <div className="me-timeline-content">
                   <strong>Position held in account</strong>
-                  <p>Collateral value is $18,420 and liquidation distance is 24.6%.</p>
+                 <p>
+                   {selectedEvent.before
+                     ? `Collateral value is ${formatCurrency(selectedEvent.before.collateralValue)} and liquidation distance is ${formatPercent(selectedEvent.before.liquidationDistance)}.`
+                     : "Account snapshot is waiting for the event data source."}
+                 </p>
                 </div>
               </div>
               <div className="me-timeline-item">
                 <span className="me-timeline-time">T−18h42m</span>
                 <div className="me-timeline-content">
                   <strong>Adjustment announced</strong>
-                  <p>Reverse split / rToken mechanics are marked for the selected event file.</p>
+                 <p>{selectedEvent.kind} is marked for the selected event file.</p>
                 </div>
               </div>
               <div className="me-timeline-item future">
                 <span className="me-timeline-time">event</span>
                 <div className="me-timeline-content">
                   <strong>Collateral ledger updates</strong>
-                  <p>Expected path: $17,912 collateral, 3.1x leverage, 18.2% distance.</p>
+                 <p>
+                   {selectedEvent.after
+                     ? `Expected path: ${formatCurrency(selectedEvent.after.collateralValue)} collateral, ${selectedEvent.after.leverage.toFixed(1)}x leverage, ${formatPercent(selectedEvent.after.liquidationDistance)} distance.`
+                     : "Expected path is not available until the event inputs are opened."}
+                 </p>
                 </div>
               </div>
             </div>
@@ -330,8 +344,8 @@ export function Desk() {
                     <span className="me-scenario-copy">{item.copy}</span>
                   </span>
                   <span className="me-scenario-result">
-                    {scenario === item.key ? "selected · " : ""}
-                    {item.result}
+                     {scenario === item.key ? "selected · " : ""}
+                     {impact ? (item.key === "hold" ? `buffer narrows to ${formatPercent(selectedEvent.after!.liquidationDistance)}` : item.result) : "awaiting event inputs"}
                   </span>
                 </button>
               ))}
@@ -340,8 +354,7 @@ export function Desk() {
 
           <footer className="me-footer">
             <p className="me-source">
-              Source trail: simulated event data for prototype review. Calculations are deterministic and explainable;
-              AI is used only as a plain-language narrator. Context: UTA / rToken mechanics.
+               Source trail: simulated event data for prototype review. {impact ? "The rNVDA path is calculated from explicit before/after fixtures." : "This event has no account fixture yet."} Calculations are deterministic and explainable; AI is used only as a plain-language narrator. Context: UTA / rToken mechanics.
             </p>
             <span className="me-version">M//E 0.7 / desk</span>
           </footer>
