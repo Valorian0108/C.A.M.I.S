@@ -1,6 +1,6 @@
-# [Project name]
+# MARGIN//EVENT
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Pre-event margin consequence simulator for leveraged rToken traders.
 
 ## Run & Operate
 
@@ -22,23 +22,39 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/mockup-sandbox/src/components/mockups/margin-event/Desk.tsx` — current UI prototype
+- `artifacts/mockup-sandbox/src/components/mockups/margin-event/_group.css` — prototype-local styles
+- `README.md` — product overview and implementation plan
+- `PROGRESS.md` — push-by-push progress log
+- `attached_assets/Pasted--Base-Camp-Hackathon-S2-EN-When-tokenized-US-stocks-mak_1789011891049.txt` — hackathon brief
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- The product is positioned as an AI Trading Desk, with the human retaining final decision authority.
+- Financial outputs must come from deterministic simulator rules; Qwen explains results and uncertainty but does not create the numerical truth.
+- The interface uses an independent MARGIN//EVENT identity rather than obvious exchange branding.
+- The current prototype is isolated in the mockup sandbox so its styles do not affect other reusable mockups.
+- Credentials must remain server-side and must never be committed to the repository.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Inspect upcoming rToken corporate actions.
+- Compare account collateral and margin state before and after an event.
+- Understand liquidation-buffer changes in plain language.
+- Compare hold, add-collateral, and reduce-exposure scenarios.
+- Use Qwen as a research copilot after deterministic calculations are complete.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Keep the project documentation current.
+- Add a progress entry for each implementation push so progress is easy to track.
+- Push implementation changes to the connected GitHub repository when authentication is available.
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- The current mockup is not yet a deployable application.
+- Do not put Qwen or Bitget credentials in frontend code, commits, or chat.
+- Simulated numbers must be labeled until the official event and margin rules are connected.
 
 ## Pointers
 
