@@ -43,13 +43,13 @@ export const EVENT_MODELS: EventModel[] = [
       collateralValue: 18420,
       leverage: 2.8,
       liquidationDistance: 24.6,
-      collateralRatio: 95,
+      collateralRatio: 0.95, // 95% as decimal
     },
     after: {
       collateralValue: 17912,
       leverage: 3.1,
       liquidationDistance: 18.2,
-      collateralRatio: 95,
+      collateralRatio: 0.95, // 95% as decimal
     },
   },
   {

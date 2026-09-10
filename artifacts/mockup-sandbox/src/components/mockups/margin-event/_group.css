@@ -48,6 +48,60 @@
   color: inherit;
 }
 
+/* AI Explanation Section */
+.me-ai-explanation {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  background: var(--me-panel);
+  border-radius: var(--me-radius);
+  border: 1px solid var(--me-line);
+}
+
+.me-ai-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: var(--me-mint-deep);
+}
+
+.me-ai-header strong {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.me-loading {
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: var(--me-ink-soft);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.me-ai-content {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--me-ink);
+}
+
+.me-ai-content p {
+  margin: 0 0 0.75rem 0;
+}
+
+.me-ai-content p:last-child {
+  margin-bottom: 0;
+}
+
+.me-ai-placeholder {
+  font-size: 0.85rem;
+  color: var(--me-ink-soft);
+  font-style: italic;
+}
+
 .me-root button:focus-visible,
 .me-root input:focus-visible {
   outline: 2px solid var(--me-focus);

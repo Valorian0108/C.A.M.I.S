@@ -26,6 +26,7 @@ import {
   type EventKey,
   type ScenarioKey,
 } from "./simulator";
+import { apiClient } from "../../lib/api-client";
 
 const SCENARIOS: Array<{
   key: ScenarioKey;
@@ -87,6 +88,8 @@ export function Desk() {
   const [commandOpen, setCommandOpen] = useState(false);
   const [commandQuery, setCommandQuery] = useState("");
   const [investigating, setInvestigating] = useState(false);
+  const [aiExplanation, setAiExplanation] = useState<string | null>(null);
+  const [loadingExplanation, setLoadingExplanation] = useState(false);
 
   const selectedEvent = findEvent(selectedKey);
   const impact = calculateImpact(selectedEvent);
@@ -112,10 +115,40 @@ export function Desk() {
     setInvestigating(false);
   }
 
+  async function fetchAIExplanation() {
+    if (!selectedEvent.before || !selectedEvent.after) return;
+
+    setLoadingExplanation(true);
+    try {
+      const response = await apiClient.getMarginExplanation({
+        token: selectedEvent.key,
+        eventType: selectedEvent.kind,
+        beforeState: selectedEvent.before,
+        afterState: selectedEvent.after,
+        recommendedAction: scenario,
+      });
+
+      if (response.success) {
+        setAiExplanation(response.explanation);
+      }
+    } catch (error) {
+      console.error('Failed to fetch AI explanation:', error);
+      setAiExplanation(null);
+    } finally {
+      setLoadingExplanation(false);
+    }
+  }
+
   function runCommand(action: "investigate" | "hold" | "add" | "reduce") {
-    if (action === "investigate") setInvestigating(true);
+    if (action === "investigate") {
+      setInvestigating(true);
+      fetchAIExplanation();
+    }
     if (action === "hold" || action === "add" || action === "reduce") {
       setScenario(action);
+      if (investigating) {
+        fetchAIExplanation();
+      }
     }
     setCommandOpen(false);
     setCommandQuery("");
@@ -254,12 +287,12 @@ export function Desk() {
             </div>
             <div className="me-ratio-panel">
               <div className="me-ratio-top">
-               <strong>{selectedEvent.after ? `${selectedEvent.after.collateralRatio}%` : "—"}</strong>
+               <strong>{selectedEvent.after ? `${(selectedEvent.after.collateralRatio * 100).toFixed(0)}%` : "—"}</strong>
                 <span>collateral ratio<br />maintenance line</span>
               </div>
                <div
                  className="me-ratio-bar"
-                 aria-label={selectedEvent.after ? `Collateral ratio: ${selectedEvent.after.collateralRatio} percent` : "Collateral ratio not modeled"}
+                 aria-label={selectedEvent.after ? `Collateral ratio: ${(selectedEvent.after.collateralRatio * 100).toFixed(0)} percent` : "Collateral ratio not modeled"}
                >
                 <span className="me-ratio-marker" aria-hidden="true" />
               </div>
@@ -291,6 +324,27 @@ export function Desk() {
                 {investigating ? <X size={13} /> : <PanelRight size={13} />}
               </button>
             </div>
+
+            {investigating && (
+              <div className="me-ai-explanation">
+                <div className="me-ai-header">
+                  <FileText size={16} strokeWidth={1.7} />
+                  <strong>AI Analysis</strong>
+                  {loadingExplanation && <span className="me-loading">Loading...</span>}
+                </div>
+                {aiExplanation ? (
+                  <div className="me-ai-content">
+                    {aiExplanation.split('\n').map((line, index) => (
+                      <p key={index}>{line}</p>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="me-ai-placeholder">
+                    {loadingExplanation ? 'Generating margin impact analysis...' : 'Click "Open investigation" to generate AI-powered explanation.'}
+                  </p>
+                )}
+              </div>
+            )}
 
             <div className="me-timeline" aria-label="Event evidence timeline">
               <div className="me-timeline-item">

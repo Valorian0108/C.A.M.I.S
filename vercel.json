@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "artifacts/api-server/package.json",
+      "use": "@vercel/node",
+      "config": {
+        "outputDirectory": "artifacts/api-server/dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/artifacts/api-server/dist/index.mjs"
+    }
+  ],
+  "env": {
+    "PORT": "5000",
+    "NODE_ENV": "production"
+  }
+}
