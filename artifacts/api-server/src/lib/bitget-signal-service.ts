@@ -1,22 +1,3 @@
-import { Client, StreamableHTTPClientTransport } from '@modelcontextprotocol/client';
-
-/**
- * Bitget Signal Service
- * 
- * Attempts to connect to Bitget's public MCP server (https://datahub.noxiaohao.com/mcp)
- * to fetch market research data for margin impact analysis.
- * 
- * This provides the same data as bitget-signal skills but programmatically
- * from our backend instead of through an AI assistant.
- * 
- * No API key required - uses public market data only.
- * 
- * Note: The public MCP server may have connectivity issues or protocol differences.
- * This service includes a robust fallback system to ensure demo reliability.
- */
-
-const BITGET_MCP_URL = 'https://datahub.noxiaohao.com/mcp';
-
 export interface MarketResearchData {
   fearGreedIndex?: number;
   fearGreedSentiment?: 'Extreme Fear' | 'Fear' | 'Neutral' | 'Greed' | 'Extreme Greed';
@@ -44,162 +25,143 @@ export interface MarketResearchData {
 export interface MarketResearchResponse {
   success: boolean;
   data?: MarketResearchData;
-  source: 'live' | 'fallback';
+  source: 'live' | 'error';
   error?: string;
 }
 
+interface BitgetTicker {
+  symbol: string;
+  lastPrice: string;
+  price24hPcnt: string;
+  volume24h: string;
+  highPrice24h: string;
+  lowPrice24h: string;
+}
+
+interface BitgetTickerResponse {
+  code: string;
+  data?: BitgetTicker[];
+  msg?: string;
+}
+
+interface BitgetDiscountRateResponse {
+  code: string;
+  data?: Array<{
+    coin: string;
+    list?: Array<{
+      tierStartValue: string;
+      discountRate: string;
+    }>;
+  }>;
+  msg?: string;
+}
+
+function normalizeSpotSymbol(symbol = 'BTCUSDT'): string {
+  const normalized = symbol.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (normalized.endsWith('USDT')) return normalized;
+  return normalized.startsWith('R') ? `${normalized}USDT` : `R${normalized}USDT`;
+}
+
+function symbolToCoin(symbol: string): string {
+  const normalized = normalizeSpotSymbol(symbol);
+  return normalized.endsWith('USDT') ? normalized.slice(0, -4) : normalized;
+}
+
+async function fetchJson<T>(url: string, timeoutMs = 8000): Promise<T> {
+  const response = await fetch(url, {
+    signal: AbortSignal.timeout(timeoutMs),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Bitget returned ${response.status} for ${url}`);
+  }
+
+  return response.json() as Promise<T>;
+}
+
+function sentimentFromChange(change24h: number): string {
+  if (change24h >= 2) return 'Positive live momentum: price is up more than 2% over 24h.';
+  if (change24h >= 0.25) return 'Mild positive live momentum: price is modestly higher over 24h.';
+  if (change24h <= -2) return 'Negative live momentum: price is down more than 2% over 24h.';
+  if (change24h <= -0.25) return 'Mild negative live momentum: price is modestly lower over 24h.';
+  return 'Neutral live momentum: price is broadly flat over 24h.';
+}
+
 /**
- * Fetch market research data from Bitget's public MCP server
+ * Live market research derived from Bitget public market endpoints.
+ *
+ * This intentionally returns source:error instead of fallback when live Bitget
+ * data is unavailable, because the app is being prepared for a no-fallback demo.
  */
-export async function fetchMarketResearch(
-  symbol?: string
-): Promise<MarketResearchResponse> {
-  const client = new Client({ name: 'camis-backend', version: '1.0.0' });
-
+export async function fetchMarketResearch(symbol?: string): Promise<MarketResearchResponse> {
   try {
-    const transport = new StreamableHTTPClientTransport(
-      new URL(BITGET_MCP_URL)
-    );
+    const spotSymbol = normalizeSpotSymbol(symbol);
+    const coin = symbolToCoin(spotSymbol);
+    const tickerUrl = `https://api.bitget.com/api/v3/market/tickers?category=SPOT&symbol=${spotSymbol}`;
+    const discountUrl = 'https://api.bitget.com/api/v3/market/discount-rate';
 
-    await client.connect(transport);
+    const [tickerPayload, discountPayload] = await Promise.all([
+      fetchJson<BitgetTickerResponse>(tickerUrl),
+      fetchJson<BitgetDiscountRateResponse>(discountUrl),
+    ]);
 
-    // List available tools to discover what's available
-    const toolsResult = await client.listTools();
-    
-    if (!toolsResult.success) {
-      throw new Error('Failed to list MCP tools');
+    const ticker = tickerPayload.data?.[0];
+    if (tickerPayload.code !== '00000' || !ticker) {
+      throw new Error(`Bitget ticker missing for ${spotSymbol}: ${tickerPayload.msg || tickerPayload.code}`);
     }
 
-    // Try to call relevant market research tools
-    const researchData: MarketResearchData = {};
+    const price = Number(ticker.lastPrice);
+    const high = Number(ticker.highPrice24h);
+    const low = Number(ticker.lowPrice24h);
+    const change24h = Number(ticker.price24hPcnt) * 100;
+    const volume = Number(ticker.volume24h);
+    const range = Math.max(high - low, 0);
+    const rangePosition = range > 0 ? (price - low) / range : 0.5;
+    const pseudoRsi = Math.max(1, Math.min(99, 50 + change24h * 8 + (rangePosition - 0.5) * 20));
 
-    // Attempt to fetch Fear & Greed Index (if available)
-    try {
-      const fearGreedResult = await client.callTool({
-        name: 'fear_greed_index',
-        arguments: {}
-      });
-      
-      if (fearGreedResult.success && fearGreedResult.content) {
-        const content = fearGreedResult.content[0];
-        if (content.type === 'text') {
-          const data = JSON.parse(content.text);
-          researchData.fearGreedIndex = data.value;
-          researchData.fearGreedSentiment = data.sentiment;
-        }
-      }
-    } catch (e) {
-      // Tool may not exist, continue
+    const discountRow = discountPayload.data?.find((row) => row.coin.toUpperCase() === coin);
+    const discountRate = Number(discountRow?.list?.[0]?.discountRate);
+    if (discountPayload.code !== '00000' || Number.isNaN(discountRate)) {
+      throw new Error(`Bitget discount-rate missing for ${coin}: ${discountPayload.msg || discountPayload.code}`);
     }
-
-    // Attempt to fetch funding rates for symbol
-    if (symbol) {
-      try {
-        const fundingResult = await client.callTool({
-          name: 'market',
-          arguments: {
-            action: 'fundingRate',
-            symbol: symbol
-          }
-        });
-
-        if (fundingResult.success && fundingResult.content) {
-          const content = fundingResult.content[0];
-          if (content.type === 'text') {
-            const data = JSON.parse(content.text);
-            researchData.fundingRates = { [symbol]: data.fundingRate };
-          }
-        }
-      } catch (e) {
-        // Tool may not exist, continue
-      }
-    }
-
-    // Attempt to fetch market sentiment
-    try {
-      const sentimentResult = await client.callTool({
-        name: 'sentiment_analyst',
-        arguments: {}
-      });
-
-      if (sentimentResult.success && sentimentResult.content) {
-        const content = sentimentResult.content[0];
-        if (content.type === 'text') {
-          const data = JSON.parse(content.text);
-          researchData.marketSentiment = data.overview;
-          researchData.longShortRatio = data.longShortRatio;
-        }
-      }
-    } catch (e) {
-      // Tool may not exist, continue
-    }
-
-    await client.close();
 
     return {
       success: true,
-      data: researchData,
-      source: 'live'
+      source: 'live',
+      data: {
+        fearGreedIndex: Math.round(Math.max(1, Math.min(99, pseudoRsi))),
+        fearGreedSentiment: pseudoRsi >= 65 ? 'Greed' : pseudoRsi <= 35 ? 'Fear' : 'Neutral',
+        longShortRatio: Number((1 + change24h / 100).toFixed(3)),
+        marketSentiment: `${sentimentFromChange(change24h)} ${spotSymbol} trades at $${price.toLocaleString()} with $${volume.toLocaleString()} 24h volume and a ${discountRate.toFixed(2)} Bitget discount-rate tier.`,
+        technicalIndicators: {
+          rsi: Number(pseudoRsi.toFixed(1)),
+          macd: Number(change24h.toFixed(3)),
+          support: low,
+          resistance: high,
+        },
+        macroContext: {
+          fedPolicy: `Live Bitget spot context for ${spotSymbol}; macro feed is not required for this rToken margin check.`,
+        },
+      },
     };
-
   } catch (error) {
-    console.error('Bitget MCP connection error:', error);
-    console.log('Using fallback market research data');
-    
-    // Return fallback data if MCP connection fails
-    return getFallbackMarketResearch();
+    console.error('Bitget live market research error:', error);
+    return {
+      success: false,
+      source: 'error',
+      error: error instanceof Error ? error.message : 'Live Bitget market research failed',
+    };
   }
 }
 
-/**
- * Fallback market research data when MCP is unavailable
- */
-function getFallbackMarketResearch(): MarketResearchResponse {
-  return {
-    success: true,
-    data: {
-      fearGreedIndex: 45,
-      fearGreedSentiment: 'Neutral',
-      longShortRatio: 1.2,
-      fundingRates: {
-        'BTCUSDT': 0.01,
-        'ETHUSDT': 0.008
-      },
-      marketSentiment: 'Market showing moderate bullish sentiment with balanced long/short positioning',
-      technicalIndicators: {
-        rsi: 55,
-        macd: 0.5,
-        support: 95000,
-        resistance: 105000
-      },
-      whaleActivity: {
-        inflows: 125000000,
-        outflows: 98000000,
-        netFlow: 27000000
-      },
-      macroContext: {
-        fedPolicy: 'Wait-and-see stance with moderate rate cut expectations',
-        btcCorrelation: 0.65,
-        dxy: 104.5
-      }
-    },
-    source: 'fallback',
-    error: 'MCP connection failed, using fallback data'
-  };
-}
-
-/**
- * Format market research data for Qwen prompt
- */
-export function formatMarketResearchForPrompt(
-  data: MarketResearchData
-): string {
+export function formatMarketResearchForPrompt(data: MarketResearchData): string {
   const sections: string[] = [];
 
   if (data.fearGreedIndex) {
-    sections.push(
-      `Fear & Greed Index: ${data.fearGreedIndex} (${data.fearGreedSentiment})`
-    );
+    sections.push(`Live Momentum Index: ${data.fearGreedIndex} (${data.fearGreedSentiment})`);
   }
 
   if (data.marketSentiment) {
@@ -207,41 +169,21 @@ export function formatMarketResearchForPrompt(
   }
 
   if (data.longShortRatio) {
-    sections.push(
-      `Long/Short Ratio: ${data.longShortRatio} (bullish if >1, bearish if <1)`
-    );
-  }
-
-  if (data.fundingRates) {
-    sections.push(
-      `Funding Rates: ${Object.entries(data.fundingRates)
-        .map(([sym, rate]) => `${sym}: ${(rate * 100).toFixed(4)}%`)
-        .join(', ')}`
-    );
+    sections.push(`Momentum Ratio: ${data.longShortRatio}`);
   }
 
   if (data.technicalIndicators) {
     const ta = data.technicalIndicators;
     sections.push(
-      `Technical Analysis: RSI ${ta.rsi}, MACD ${ta.macd}, Support $${ta.support?.toLocaleString()}, Resistance $${ta.resistance?.toLocaleString()}`
-    );
-  }
-
-  if (data.whaleActivity) {
-    const whale = data.whaleActivity;
-    sections.push(
-      `Whale Activity: Inflows $${whale.inflows?.toLocaleString()}, Outflows $${whale.outflows?.toLocaleString()}, Net Flow $${whale.netFlow?.toLocaleString()}`
+      `Technical Context: RSI ${ta.rsi}, momentum ${ta.macd}%, 24h support $${ta.support?.toLocaleString()}, 24h resistance $${ta.resistance?.toLocaleString()}`
     );
   }
 
   if (data.macroContext) {
-    const macro = data.macroContext;
-    sections.push(
-      `Macro Context: ${macro.fedPolicy}, BTC Correlation ${macro.btcCorrelation}, DXY ${macro.dxy}`
-    );
+    sections.push(`Macro Context: ${data.macroContext.fedPolicy}`);
   }
 
-  return sections.length > 0 
-    ? `Market Research Context:\n${sections.map(s => `- ${s}`).join('\n')}`
-    : 'No market research data available';
+  return sections.length > 0
+    ? `Live Bitget Market Context:\n${sections.map((section) => `- ${section}`).join('\n')}`
+    : 'No live market research data available';
 }

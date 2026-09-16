@@ -1,4 +1,4 @@
-import Desk from "./components/mockups/margin-event/Desk";
+import { Desk } from "./components/mockups/margin-event/Desk";
 
 function App() {
   return <Desk />;

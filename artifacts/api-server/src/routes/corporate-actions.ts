@@ -23,12 +23,14 @@ router.get("/corporate-actions", async (req, res) => {
 
     const validatedData = CorporateActionsRequestSchema.parse({ symbols });
     
-    const actions = await alpacaService.getCorporateActions(validatedData.symbols);
+    const result = await alpacaService.getCorporateActions(validatedData.symbols);
 
     res.json({
       success: true,
-      data: actions,
-      count: actions.length,
+      data: result.data,
+      count: result.data.length,
+      source: result.source,
+      sourceDetail: result.sourceDetail,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {

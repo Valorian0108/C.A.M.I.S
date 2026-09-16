@@ -17,17 +17,25 @@ interface AlpacaAnnouncement {
   id: string;
   corporate_action_type: string;
   symbol: string;
-  declaration_date: string;
-  ex_date: string;
-  record_date: string;
-  payable_date: string;
-  cash_amount: number;
-  description: string;
+  declaration_date?: string;
+  ex_date?: string;
+  record_date?: string;
+  payable_date?: string;
+  cash_amount?: number;
+  description?: string;
 }
 
 interface AlpacaResponse {
   corporate_actions?: AlpacaCorporateAction[];
   announcements?: AlpacaAnnouncement[];
+  next_page_token?: string;
+  [key: string]: unknown;
+}
+
+export interface AlpacaCorporateActionsResult {
+  data: AlpacaCorporateAction[];
+  source: 'live' | 'fallback';
+  sourceDetail: string;
 }
 
 export class AlpacaService {
@@ -51,86 +59,130 @@ export class AlpacaService {
     return Buffer.from(`${this.apiKey}:${this.apiSecret}`).toString('base64');
   }
 
-  async getCorporateActions(symbols: string[]): Promise<AlpacaCorporateAction[]> {
-    // If no credentials, return mock data for demo
+  private getCorporateActionsUrl(): string {
+    try {
+      const url = new URL(this.baseUrl);
+      return `${url.origin}/v1/corporate-actions`;
+    } catch {
+      return 'https://data.alpaca.markets/v1/corporate-actions';
+    }
+  }
+
+  private normalizeCorporateAction(raw: Record<string, unknown>, fallbackSymbol = ''): AlpacaCorporateAction {
+    const type = String(raw.type || raw.corporate_action_type || raw.ca_type || 'corporate_action');
+    const symbol = String(raw.symbol || raw.initiating_symbol || raw.target_symbol || fallbackSymbol);
+    const exDate = String(raw.ex_date || raw.corporate_action_date || raw.process_date || raw.payable_date || '');
+
+    return {
+      id: String(raw.id || `${symbol}-${type}-${exDate}`),
+      symbol,
+      corporate_action_type: type,
+      corporate_action_date: exDate,
+      declaration_date: String(raw.declaration_date || ''),
+      record_date: String(raw.record_date || ''),
+      effective_date: String(raw.payable_date || raw.effective_date || exDate),
+      cash_amount: Number(raw.cash || raw.cash_amount || raw.rate || 0),
+      new_rate: Number(raw.new_rate || raw.new_shares_rate || 0),
+      old_rate: Number(raw.old_rate || raw.old_shares_rate || 0),
+      distribution_frequency: String(raw.frequency || raw.distribution_frequency || 'once'),
+      description: String(raw.description || `${symbol} ${type}`),
+    };
+  }
+
+  private extractCorporateActions(data: AlpacaResponse, symbols: string[]): AlpacaCorporateAction[] {
+    if (Array.isArray(data.corporate_actions)) {
+      return data.corporate_actions;
+    }
+
+    const actions: AlpacaCorporateAction[] = [];
+    const supportedKeys = [
+      'reverse_splits',
+      'forward_splits',
+      'unit_splits',
+      'cash_dividends',
+      'stock_dividends',
+      'spin_offs',
+      'cash_mergers',
+      'stock_mergers',
+      'stock_and_cash_mergers',
+      'redemptions',
+      'name_changes',
+      'worthless_removals',
+      'rights_distributions',
+      'partial_calls',
+      'reorganizations',
+      'capital_gains_distributions',
+    ];
+
+    for (const key of supportedKeys) {
+      const value = data[key];
+      if (!Array.isArray(value)) continue;
+
+      for (const item of value) {
+        if (item && typeof item === 'object') {
+          actions.push(this.normalizeCorporateAction(item as Record<string, unknown>));
+        }
+      }
+    }
+
+    return actions.filter((action) => symbols.includes(action.symbol));
+  }
+
+  async getCorporateActions(symbols: string[]): Promise<AlpacaCorporateActionsResult> {
     if (!this.apiKey || !this.apiSecret) {
-      return this.getMockCorporateActions(symbols);
+      return {
+        data: this.getMockCorporateActions(symbols),
+        source: 'fallback',
+        sourceDetail: 'Alpaca credentials missing; using demo corporate-action fixtures.',
+      };
     }
 
     try {
-      // Try the announcements endpoint first (more commonly accessible)
-      const symbolParams = symbols.map(s => `symbol=${s}`).join('&');
       const startDate = new Date();
-      startDate.setDate(startDate.getDate() - 30); // Last 30 days
+      startDate.setDate(startDate.getDate() - 30);
       const endDate = new Date();
+      endDate.setDate(endDate.getDate() + 90);
       const since = startDate.toISOString().split('T')[0];
       const until = endDate.toISOString().split('T')[0];
       
       const response = await fetch(
-        `https://data.alpaca.markets/v2/corporate-actions/announcements?${symbolParams}&since=${since}&until=${until}`,
+        `${this.getCorporateActionsUrl()}?symbols=${symbols.join(',')}&start=${since}&end=${until}&data_quality=all&limit=1000`,
         {
           method: 'GET',
           headers: {
-            'Authorization': `Basic ${this.getAuthHeader()}`,
+            'APCA-API-KEY-ID': this.apiKey,
+            'APCA-API-SECRET-KEY': this.apiSecret,
             'Content-Type': 'application/json',
           },
         }
       );
 
       if (!response.ok) {
-        console.warn(`Alpaca API error: ${response.status}, trying corporate-actions endpoint`);
-        
-        // Fallback to corporate-actions endpoint
-        const corpResponse = await fetch(
-          `https://data.alpaca.markets/v2/corporate-actions?symbols=${symbols.join(',')}`,
-          {
-            method: 'GET',
-            headers: {
-              'Authorization': `Basic ${this.getAuthHeader()}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-
-        if (!corpResponse.ok) {
-          console.warn(`Alpaca corporate-actions error: ${corpResponse.status}, using mock data`);
-          return this.getMockCorporateActions(symbols);
-        }
-
-        const corpData: AlpacaResponse = await corpResponse.json();
-        return corpData.corporate_actions || [];
+        console.warn(`Alpaca corporate-actions error: ${response.status}, using mock data`);
+        return {
+          data: this.getMockCorporateActions(symbols),
+          source: 'fallback',
+          sourceDetail: `Alpaca returned ${response.status}; using demo corporate-action fixtures.`,
+        };
       }
 
-      const data: AlpacaResponse = await response.json();
+      const data = await response.json() as AlpacaResponse;
+      const actions = this.extractCorporateActions(data, symbols);
       
-      // Handle both corporate_actions and announcements responses
-      if (data.corporate_actions) {
-        return data.corporate_actions;
-      }
-      
-      if (data.announcements) {
-        // Convert announcements to our corporate action format
-        return data.announcements.map(announcement => ({
-          id: announcement.id,
-          symbol: announcement.symbol,
-          corporate_action_type: announcement.corporate_action_type,
-          corporate_action_date: announcement.ex_date || announcement.corporate_action_date,
-          declaration_date: announcement.declaration_date,
-          record_date: announcement.record_date,
-          effective_date: announcement.payable_date || announcement.effective_date,
-          cash_amount: announcement.cash_amount,
-          new_rate: 0,
-          old_rate: 0,
-          distribution_frequency: 'once',
-          description: announcement.description
-        }));
-      }
-      
-      return [];
+      return {
+        data: actions,
+        source: 'live',
+        sourceDetail: actions.length > 0
+          ? 'Alpaca v1 corporate-actions endpoint.'
+          : 'Alpaca responded successfully; no matching corporate actions found in the requested window.',
+      };
     } catch (error) {
       console.error('Error fetching corporate actions from Alpaca:', error);
-      // Fallback to mock data for demo reliability
-      return this.getMockCorporateActions(symbols);
+      return {
+        data: this.getMockCorporateActions(symbols),
+        source: 'fallback',
+        sourceDetail: 'Alpaca request failed; using demo corporate-action fixtures.',
+      };
     }
   }
 
@@ -188,8 +240,8 @@ export class AlpacaService {
   }
 
   async getCorporateActionById(id: string): Promise<AlpacaCorporateAction | null> {
-    const allActions = await this.getCorporateActions(['NVDA', 'TSLA', 'QQQ']);
-    return allActions.find(action => action.id === id) || null;
+    const result = await this.getCorporateActions(['NVDA', 'TSLA', 'QQQ']);
+    return result.data.find(action => action.id === id) || null;
   }
 }
 

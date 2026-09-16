@@ -4,6 +4,7 @@ import marginExplanationRouter from "./margin-explanation";
 import corporateActionsRouter from "./corporate-actions";
 import marketDataRouter from "./market-data";
 import marketResearchRouter from "./market-research";
+import accountSnapshotRouter from "./account-snapshot";
 
 const router: IRouter = Router();
 
@@ -12,5 +13,6 @@ router.use(marginExplanationRouter);
 router.use(corporateActionsRouter);
 router.use(marketDataRouter);
 router.use(marketResearchRouter);
+router.use(accountSnapshotRouter);
 
 export default router;

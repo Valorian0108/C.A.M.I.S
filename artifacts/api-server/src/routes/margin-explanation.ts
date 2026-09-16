@@ -11,15 +11,21 @@ const MarginExplanationRequestSchema = z.object({
   eventType: z.string(),
   beforeState: z.object({
     collateralValue: z.number(),
+    adjustedEquity: z.number(),
+    totalPositionValue: z.number(),
     leverage: z.number(),
     marginRatio: z.number(),
     liquidationDistance: z.number(),
+    collateralRatio: z.number(),
   }),
   afterState: z.object({
     collateralValue: z.number(),
+    adjustedEquity: z.number(),
+    totalPositionValue: z.number(),
     leverage: z.number(),
     marginRatio: z.number(),
     liquidationDistance: z.number(),
+    collateralRatio: z.number(),
   }),
   recommendedAction: z.string(),
   includeMarketResearch: z.boolean().optional().default(false),
@@ -42,14 +48,16 @@ router.post("/margin-explanation", async (req, res) => {
     }
 
     // Generate explanation using Qwen with optional market research
-    const explanation = await qwenService.generateExplanation({
+    const explanationResult = await qwenService.generateExplanation({
       ...validatedData,
       marketResearch
     });
 
     res.json({
       success: true,
-      explanation,
+      explanation: explanationResult.explanation,
+      explanationSource: explanationResult.source,
+      explanationSourceDetail: explanationResult.sourceDetail,
       timestamp: new Date().toISOString(),
       marketResearchIncluded: !!marketResearch,
       marketResearchSource,

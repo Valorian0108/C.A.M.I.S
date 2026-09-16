@@ -23,12 +23,14 @@ router.get("/market-data", async (req, res) => {
 
     const validatedData = MarketDataRequestSchema.parse({ symbols });
     
-    const marketData = await bitgetService.getMarketData(validatedData.symbols);
+    const result = await bitgetService.getMarketData(validatedData.symbols);
 
     res.json({
       success: true,
-      data: marketData,
-      count: marketData.length,
+      data: result.data,
+      count: result.data.length,
+      source: result.source,
+      sourceDetail: result.sourceDetail,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
@@ -64,12 +66,14 @@ router.get("/collateral-info", async (req, res) => {
 
     const validatedData = MarketDataRequestSchema.parse({ symbols });
     
-    const collateralInfo = await bitgetService.getCollateralInfo(validatedData.symbols);
+    const result = await bitgetService.getCollateralInfo(validatedData.symbols);
 
     res.json({
       success: true,
-      data: collateralInfo,
-      count: collateralInfo.length,
+      data: result.data,
+      count: result.data.length,
+      source: result.source,
+      sourceDetail: result.sourceDetail,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
@@ -107,6 +111,43 @@ router.get("/rtoken-list", async (_req, res) => {
     res.status(500).json({
       success: false,
       error: error instanceof Error ? error.message : 'Failed to fetch rToken list',
+    });
+  }
+});
+
+router.get("/spot-symbols", async (req, res) => {
+  try {
+    const query = typeof req.query.query === 'string' ? req.query.query : '';
+    const limit = typeof req.query.limit === 'string' ? Number(req.query.limit) : 12;
+
+    if (!query.trim()) {
+      res.json({
+        success: true,
+        data: [],
+        count: 0,
+        source: 'live',
+        sourceDetail: 'Bitget spot ticker search.',
+        timestamp: new Date().toISOString(),
+      });
+      return;
+    }
+
+    const data = await bitgetService.searchSpotSymbols(query, Number.isFinite(limit) ? limit : 12);
+
+    res.json({
+      success: true,
+      data,
+      count: data.length,
+      source: 'live',
+      sourceDetail: 'Bitget spot ticker search.',
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error('Spot symbol search error:', error);
+
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to search Bitget spot symbols',
     });
   }
 });
