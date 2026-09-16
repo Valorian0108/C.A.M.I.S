@@ -2,10 +2,5 @@
   "buildCommand": "pnpm run build",
   "outputDirectory": "artifacts/mockup-sandbox/dist",
   "installCommand": "pnpm install",
-  "framework": null,
-  "functions": {
-    "api/**/*.js": {
-      "runtime": "nodejs20.x"
-    }
-  }
+  "framework": null
 }
