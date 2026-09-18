@@ -2,7 +2,7 @@
 
 **Corporate Action Margin Impact Simulator**
 
-CAMIS is a Bitget rToken margin workbench built for the Bitget AI x Crypto Hackathon. The idea is simple: if an rToken is used as collateral, a corporate action should not be treated like background information. It can change the numbers that decide whether a trader still has enough room in the account.
+CAMIS is a Bitget rToken margin workbench built for BitgetAI_HackathonS2. The idea is simple: if an rToken is used as collateral, a corporate action should not be treated like background information. It can change the numbers that decide whether a trader still has enough room in the account.
 
 When a stock splits, pays a dividend, or goes through another corporate action, Bitget's rTokens can adjust automatically. For a normal holder, that adjustment may feel seamless. For a trader using the rToken as collateral, the same event can change collateral value, adjusted equity, leverage, margin ratio, and liquidation distance. CAMIS was built to make that change visible before the event settles.
 
