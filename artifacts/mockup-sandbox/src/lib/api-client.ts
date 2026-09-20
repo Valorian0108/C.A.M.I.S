@@ -1,5 +1,12 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
+class HttpApiError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'HttpApiError';
+  }
+}
+
 export interface MarginSnapshot {
   collateralValue: number;
   adjustedEquity: number;
@@ -166,6 +173,15 @@ class ApiClient {
     return moduleResult.default;
   }
 
+  private async responseError(response: Response): Promise<Error> {
+    try {
+      const body = await response.json() as { error?: string; message?: string };
+      return new HttpApiError(body.error || body.message || `API error: ${response.status} ${response.statusText}`);
+    } catch {
+      return new HttpApiError(`API error: ${response.status} ${response.statusText}`);
+    }
+  }
+
   private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
     if (typeof window.fetch !== 'function') {
@@ -186,15 +202,23 @@ class ApiClient {
       });
 
       if (!response.ok) {
-        throw new Error(`API error: ${response.status} ${response.statusText}`);
+        throw await this.responseError(response);
       }
 
       return response.json();
     } catch (error) {
+      if (error instanceof HttpApiError) {
+        throw error;
+      }
+
       console.warn('Fetch API request failed; retrying with XMLHttpRequest.', error);
       try {
         return await this.requestWithXHR<T>(url, options);
-      } catch {
+      } catch (xhrError) {
+        if (xhrError instanceof Error && xhrError.message.startsWith('API error:')) {
+          throw error instanceof Error ? error : xhrError;
+        }
+
         return this.requestWithModuleFallback<T>(endpoint, options);
       }
     }

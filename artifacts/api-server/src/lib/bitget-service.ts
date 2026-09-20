@@ -533,17 +533,22 @@ export class BitgetService {
   }
 
   async getAccountSnapshot(): Promise<BitgetAccountSnapshotResult> {
+    let unifiedError: unknown;
+
+    try {
+      return await this.getUnifiedAccountSnapshot();
+    } catch (error) {
+      unifiedError = error;
+      console.warn('Bitget UTA account assets unavailable; trying Classic spot assets.', error);
+    }
+
     try {
       return await this.getClassicSpotAccountSnapshot();
-    } catch (error) {
-      const message = error instanceof Error ? error.message : '';
+    } catch (classicError) {
+      const unifiedMessage = unifiedError instanceof Error ? unifiedError.message : String(unifiedError);
+      const classicMessage = classicError instanceof Error ? classicError.message : String(classicError);
 
-      if (message.toLowerCase().includes('classic spot assets')) {
-        console.warn('Bitget Classic spot assets unavailable; trying UTA account assets.');
-        return this.getUnifiedAccountSnapshot();
-      }
-
-      throw error;
+      throw new Error(`Bitget account snapshot failed. UTA: ${unifiedMessage}. Classic: ${classicMessage}`);
     }
   }
 
