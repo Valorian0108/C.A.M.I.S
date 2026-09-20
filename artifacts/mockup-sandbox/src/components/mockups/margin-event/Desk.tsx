@@ -372,10 +372,6 @@ export function Desk() {
       }
       if (commandOpen) {
         const key = event.key.toLowerCase();
-        if (key === "h" || key === "a" || key === "r") {
-          event.preventDefault();
-          runCommand(key === "h" ? "hold" : key === "a" ? "add" : "reduce");
-        }
         if (key === "1" || key === "2" || key === "3") {
           event.preventDefault();
           chooseEvent(key === "1" ? "rNVDA" : key === "2" ? "rTSLA" : "rQQQ");
@@ -590,9 +586,9 @@ export function Desk() {
     { label: "Open rNVDA live pair", key: "rNVDA" as const, shortcut: "1" },
     { label: "Open rTSLA live pair", key: "rTSLA" as const, shortcut: "2" },
     { label: "Open rQQQ live pair", key: "rQQQ" as const, shortcut: "3" },
-    { label: "Compare hold scenario", key: "hold" as const, shortcut: "H" },
-    { label: "Compare add collateral", key: "add" as const, shortcut: "A" },
-    { label: "Compare reduce exposure", key: "reduce" as const, shortcut: "R" },
+    { label: "Compare hold scenario", key: "hold" as const, shortcut: "click" },
+    { label: "Compare add collateral", key: "add" as const, shortcut: "click" },
+    { label: "Compare reduce exposure", key: "reduce" as const, shortcut: "click" },
   ].filter((item) => item.label.toLowerCase().includes(commandQuery.toLowerCase()));
 
   const selectedDataSource = selectedLivePrice ? "live Bitget spot pair" : selectedEvent.dataSource;
@@ -1104,7 +1100,7 @@ export function Desk() {
             </div>
             <div className="me-command-label" style={{ borderTop: "1px solid var(--me-line)", padding: "10px 14px", color: "var(--me-ink-soft)", fontSize: "10px" }}>
               <ChevronRight size={13} />
-              Use 1-3 for rTokens, H/A/R for scenario paths
+              Type to search Bitget pairs, or click a scenario action
             </div>
           </div>
         </div>
