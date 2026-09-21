@@ -66,6 +66,29 @@ export class QwenService {
     }
   }
 
+  private async sleep(ms: number): Promise<void> {
+    await new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  private async callQwen(request: QwenRequest): Promise<QwenResponse> {
+    const response = await fetch(`${this.baseUrl}/chat/completions`, {
+      method: 'POST',
+      signal: AbortSignal.timeout(25000),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.apiKey}`,
+      },
+      body: JSON.stringify(request),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Qwen returned ${response.status}: ${errorText.slice(0, 240)}`);
+    }
+
+    return response.json() as Promise<QwenResponse>;
+  }
+
   async generateExplanation(simulationData: SimulationData): Promise<ExplanationResult> {
     const systemPrompt = 'You are a concise margin-risk analyst. Return 3 short paragraphs: change, risk, recommendation. Use only the supplied numbers. Round currency to whole dollars, leverage to 2 decimals, and percentages to 1 decimal. Treat account values as scenario inputs unless explicitly described as exchange-verified.';
 
@@ -82,32 +105,27 @@ export class QwenService {
         throw new Error('BITGET_QWEN_API_KEY is not configured');
       }
 
-      const response = await fetch(`${this.baseUrl}/chat/completions`, {
-        method: 'POST',
-        signal: AbortSignal.timeout(30000),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.apiKey}`,
-        },
-        body: JSON.stringify({
-          model: this.modelName,
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: userPrompt }
-          ],
-          temperature: 0.7,
-          max_tokens: 500,
-          top_p: 1,
-          stream: false
-        } as QwenRequest),
-      });
+      const request: QwenRequest = {
+        model: this.modelName,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
+        ],
+        temperature: 0.35,
+        max_tokens: 320,
+        top_p: 1,
+        stream: false
+      };
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Qwen returned ${response.status}: ${errorText.slice(0, 240)}`);
+      let data: QwenResponse;
+      try {
+        data = await this.callQwen(request);
+      } catch (firstError) {
+        console.warn('Qwen API call failed; retrying once.', firstError);
+        await this.sleep(700);
+        data = await this.callQwen(request);
       }
 
-      const data = await response.json() as QwenResponse;
       const explanation = data.choices?.[0]?.message?.content;
 
       if (!explanation) {

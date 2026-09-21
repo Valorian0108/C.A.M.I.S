@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Activity,
   ArrowDownRight,
@@ -213,8 +213,39 @@ type LiveLayer = {
   detail: string;
 };
 
+type CachedExplanation = {
+  explanation: string;
+  source: string;
+};
+
 function SourceBadge({ source }: { source: DataSource }) {
   return <span className={`me-source-badge is-${source}`}>{source}</span>;
+}
+
+function beforeSnapshotKey(
+  token: string,
+  eventType: string,
+  scenario: ScenarioKey,
+  before: MarginSnapshot | null,
+  after: MarginSnapshot | null,
+): string | null {
+  if (!before || !after) return null;
+
+  return [
+    token,
+    eventType,
+    scenario,
+    before.collateralValue,
+    before.adjustedEquity,
+    before.leverage,
+    before.marginRatio,
+    before.liquidationDistance,
+    after.collateralValue,
+    after.adjustedEquity,
+    after.leverage,
+    after.marginRatio,
+    after.liquidationDistance,
+  ].join('|');
 }
 
 export function Desk() {
@@ -236,6 +267,8 @@ export function Desk() {
   const [lastPriceUpdate, setLastPriceUpdate] = useState<number | null>(null);
   const [accountSnapshot, setAccountSnapshot] = useState<AccountSnapshot | null>(null);
   const [accountSnapshotSource, setAccountSnapshotSource] = useState<string | null>(null);
+  const explanationCache = useRef<Map<string, CachedExplanation>>(new Map());
+  const prefetchingExplanation = useRef<Set<string>>(new Set());
   const [liveLayers, setLiveLayers] = useState<LiveLayer[]>([
     { label: "Account assets", source: "checking", detail: "Checking Bitget private account endpoint." },
     { label: "Corporate actions", source: "checking", detail: "Checking Alpaca corporate-action endpoint." },
@@ -261,6 +294,8 @@ export function Desk() {
   const scenarioAfter = applyScenario(liveEvent.after, scenario);
   const scenarioEvent = { ...liveEvent, after: scenarioAfter };
   const impact = calculateImpact(scenarioEvent);
+  const beforeSnapshot = liveEvent.before;
+  const explanationCacheKey = beforeSnapshotKey(selectedEvent.key, selectedEvent.kind, scenario, beforeSnapshot, scenarioAfter);
 
   async function checkLiveData() {
     setLiveLayers([
@@ -407,6 +442,7 @@ export function Desk() {
       }
     }
 
+    window.fetch?.('/api/healthz').catch(() => undefined);
     runCheck();
     const interval = window.setInterval(() => {
       apiClient.getMarketData(Object.values(LIVE_PAIR_SYMBOLS)).then((response) => {
@@ -468,10 +504,30 @@ export function Desk() {
     setCommandQuery("");
   }
 
-  async function fetchAIExplanation() {
+  async function fetchAIExplanation(options: { prefetch?: boolean } = {}) {
     if (!beforeSnapshot || !scenarioAfter) return;
+    if (options.prefetch && !explanationCacheKey) return;
 
-    setLoadingExplanation(true);
+    if (explanationCacheKey) {
+      const cached = explanationCache.current.get(explanationCacheKey);
+      if (cached) {
+        if (!options.prefetch) {
+          setAiExplanation(cached.explanation);
+          setAiSource(cached.source);
+        }
+        return;
+      }
+
+      if (options.prefetch && prefetchingExplanation.current.has(explanationCacheKey)) return;
+      if (options.prefetch) prefetchingExplanation.current.add(explanationCacheKey);
+    }
+
+    if (!options.prefetch) {
+      setLoadingExplanation(true);
+      setAiExplanation(null);
+      setAiSource("analysis: preparing");
+    }
+
     try {
       const response = await apiClient.getMarginExplanation({
         token: selectedEvent.key,
@@ -483,17 +539,31 @@ export function Desk() {
       });
 
       if (response.success) {
-        setAiExplanation(response.explanation);
         const explanationSource = response.explanationSource ? `analysis: ${response.explanationSource}` : null;
         const researchSource = response.marketResearchSource ? `research: ${response.marketResearchSource}` : null;
-        setAiSource([explanationSource, researchSource].filter(Boolean).join(" / "));
+        const source = [explanationSource, researchSource].filter(Boolean).join(" / ");
+
+        if (explanationCacheKey) {
+          explanationCache.current.set(explanationCacheKey, {
+            explanation: response.explanation,
+            source,
+          });
+        }
+
+        if (!options.prefetch || investigating) {
+          setAiExplanation(response.explanation);
+          setAiSource(source);
+        }
       }
     } catch (error) {
       console.error('Failed to fetch AI explanation:', error);
-      setAiExplanation('Live AI analysis is unavailable. Check the Qwen API connection, then try again.');
-      setAiSource("analysis: unavailable");
+      if (!options.prefetch) {
+        setAiExplanation('Live AI analysis is unavailable. Check the Qwen API connection, then try again.');
+        setAiSource("analysis: unavailable");
+      }
     } finally {
-      setLoadingExplanation(false);
+      if (explanationCacheKey) prefetchingExplanation.current.delete(explanationCacheKey);
+      if (!options.prefetch) setLoadingExplanation(false);
     }
   }
 
@@ -526,7 +596,18 @@ export function Desk() {
     if (investigating) {
       fetchAIExplanation();
     }
-  }, [scenario]);
+  }, [explanationCacheKey]);
+
+  useEffect(() => {
+    if (!explanationCacheKey || investigating || !beforeSnapshot || !scenarioAfter) return;
+    if (explanationCache.current.has(explanationCacheKey)) return;
+
+    const timeout = window.setTimeout(() => {
+      fetchAIExplanation({ prefetch: true });
+    }, 1400);
+
+    return () => window.clearTimeout(timeout);
+  }, [explanationCacheKey, investigating, beforeSnapshot, scenarioAfter]);
 
   useEffect(() => {
     if (!searchedEvent || !selectedLivePrice) return;
@@ -592,7 +673,6 @@ export function Desk() {
   ].filter((item) => item.label.toLowerCase().includes(commandQuery.toLowerCase()));
 
   const selectedDataSource = selectedLivePrice ? "live Bitget spot pair" : selectedEvent.dataSource;
-  const beforeSnapshot = liveEvent.before;
   const selectedAccountCoin = tokenToAccountCoin(selectedEvent.key);
   const selectedAccountAsset = accountSnapshot?.assets.find(
     (asset) => asset.coin.toUpperCase() === selectedAccountCoin,
