@@ -1,0 +1,13 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">CAMIS logo</title>
+  <desc id="desc">A dark square mark with a stylized C, orange event bar, and green margin buffer bar.</desc>
+  <rect width="256" height="256" rx="56" fill="#0F1E18"/>
+  <rect x="18" y="18" width="220" height="220" rx="44" stroke="#EAF2EC" stroke-opacity="0.1" stroke-width="2"/>
+  <path d="M151 72H91C68.909 72 51 89.9086 51 112V144C51 166.091 68.909 184 91 184H151" stroke="#F1F7EF" stroke-width="20" stroke-linecap="round"/>
+  <path d="M104 92H181" stroke="#E85A37" stroke-width="20" stroke-linecap="round"/>
+  <path d="M104 128H167" stroke="#CFFF45" stroke-width="20" stroke-linecap="round"/>
+  <path d="M193 76L172 180" stroke="#E85A37" stroke-width="10" stroke-linecap="round"/>
+  <path d="M213 76L192 180" stroke="#CFFF45" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="91" cy="184" r="6" fill="#E85A37"/>
+  <circle cx="151" cy="184" r="6" fill="#8AA99B"/>
+</svg>
