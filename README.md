@@ -1,6 +1,4 @@
-<div align="center">
 
-<img src="assets/camis-logo.svg" width="96" alt="CAMIS logo" />
 
 # CAMIS
 
